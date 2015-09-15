@@ -25,7 +25,6 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-
     # This method takes three parameters:
 
     # subject as a symbol from the following set: [:math, :reading, :writing]
@@ -39,7 +38,6 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-
     # This method take three parameters:
 
     #subject as a symbol from the following set: [:math, :reading, :writing]
@@ -52,7 +50,6 @@ class StatewideTesting
   end
 
   def proficient_for_subject_in_year(subject, year)
-
     # This method take two parameters:
 
     #subject as a symbol from the following set: [:math, :reading, :writing]
@@ -61,6 +58,4 @@ class StatewideTesting
 
     #The method returns a truncated three-digit floating point number representing a percentage.
   end
-
-
 end
