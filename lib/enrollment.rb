@@ -1,7 +1,13 @@
+require "district_repository"
+
 class Enrollment
   def initialize(name)
   # An instance this class can be initialized by supplying the name of the
   #district which is then used to find the matching data in the data files.
+  end
+
+  def in_year(year)
+    @data[6][:data]
   end
 
   def dropout_rate_in_year(year)

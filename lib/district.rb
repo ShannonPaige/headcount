@@ -1,5 +1,7 @@
+require "enrollment"
 
 class District
+  attr_accessor :district
 
   def name
     #return upcased name of the District
@@ -10,7 +12,7 @@ class District
   end
 
   def enrollment
-    #returns an instance of enrollment
+    Enrollment.new(name)
   end
 
 end

@@ -16,7 +16,7 @@ class DistrictTest < Minitest::Test
     skip
   end
 
-  def test_free_or_reduced_lunch_in_year(year)
+  def test_free_or_reduced_lunch_in_year
     skip
   end
 

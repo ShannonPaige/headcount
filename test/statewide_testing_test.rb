@@ -1,6 +1,6 @@
 require "statewide_testing"
 
-class StatewideTesting < Minitest::Test
+class StatewideTestingTest < Minitest::Test
   def test_returns_a_hash_grouped_by_year
     skip
   end
