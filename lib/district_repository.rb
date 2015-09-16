@@ -1,5 +1,6 @@
 require "csv"                # => true
-require_relative "district"  # ~> LoadError: cannot load such file -- enrollment
+require_relative "district"
+require "pry" # ~> LoadError: cannot load such file -- enrollment
 
 class DistrictRepository
   attr_accessor :data
@@ -17,12 +18,12 @@ class DistrictRepository
     district_exists = data.any? do |hash|
       hash[:location] == district_name
     end
-    District.new(district_name) if district_exists
+    District.new(district_name, data) if district_exists
   end
 
-  # def find_all_matching
-  #
-  # end
+  def find_all_matching
+
+  end
 
 end
 
