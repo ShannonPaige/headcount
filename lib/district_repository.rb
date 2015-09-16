@@ -1,5 +1,5 @@
-require "csv"       # => true
-require "district"  # ~> LoadError: cannot load such file -- district
+require "csv"                # => true
+require_relative "district"  # ~> LoadError: cannot load such file -- enrollment
 
 class DistrictRepository
   attr_accessor :data
@@ -14,12 +14,20 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    District.new(district_name)
+    data # => [{location: 'Colorado', ...}, {location: 'ACADEMY 20', ...}]
+    data.each do |hash|
+      if hash[:location] == district_name
+      return true
+
+      else
+        return nil
+      end
+    end
   end
 
-  def find_all_matching
-
-  end
+  # def find_all_matching
+  #
+  # end
 
 end
 
@@ -34,8 +42,10 @@ district = dr.find_by_name("ACADEMY 20")
 end
 
 # ~> LoadError
-# ~> cannot load such file -- district
+# ~> cannot load such file -- enrollment
 # ~>
 # ~> /Users/shannonpaige/.rvm/rubies/ruby-2.2.2/lib/ruby/site_ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
 # ~> /Users/shannonpaige/.rvm/rubies/ruby-2.2.2/lib/ruby/site_ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in `require'
+# ~> /Users/shannonpaige/code/headcount/lib/district.rb:1:in `<top (required)>'
+# ~> /Users/shannonpaige/code/headcount/lib/district_repository.rb:2:in `require_relative'
 # ~> /Users/shannonpaige/code/headcount/lib/district_repository.rb:2:in `<main>'
