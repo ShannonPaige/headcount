@@ -14,15 +14,10 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    data # => [{location: 'Colorado', ...}, {location: 'ACADEMY 20', ...}]
-    data.each do |hash|
-      if hash[:location] == district_name
-      return true
-
-      else
-        return nil
-      end
+    district_exists = data.any? do |hash|
+      hash[:location] == district_name
     end
+    District.new(district_name) if district_exists
   end
 
   # def find_all_matching
