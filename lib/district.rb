@@ -1,14 +1,19 @@
 require "enrollment"
 
 class District
-  attr_accessor :district
+  attr_accessor :district_name
+
+  def initialize(district_name)
+    @district_name = district_name
+  end
 
   def name
     #return upcased name of the District
+    name.upcase
   end
 
   def statewide_testing
-    #returns an instance of statewide testing
+    StatewideTesting.new
   end
 
   def enrollment
