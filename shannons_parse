@@ -32,6 +32,8 @@ end
 data_hash
 
 
+
+
 # hash[:race], hash[:timeframe],
 data_hash.fetch('Colorado').fetch(:enrollment).fetch("2009")
 
