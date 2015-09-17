@@ -15,13 +15,18 @@ class DistrictRepository
       hash.fetch(:location)
     end
     if data_dir == './data/Pupil enrollment.csv'
-      data_hash = grouped.map do |key, hashes|
-        mapped_data = hashes.map do |hash|
-          [hash[:timeframe], hash[:data]]
+      data_array = grouped.map do |key, hashes|
+        enrollment_data = hashes.map do |hash|
+            mapped_data = hashes.map do |hash|
+              [hash[:timeframe], hash[:data]]
+            end
+            [:enrollment, mapped_data.to_h]
         end
-        {key => {:enrollment => mapped_data.to_h}}
+        [key, enrollment_data.to_h]
       end
+      data_hash = data_array.to_h
     end
+    if data_dir == './data/'
     DistrictRepository.new(data_hash)
   end                                                                                            # => :load_from_csv
 
@@ -31,7 +36,7 @@ class DistrictRepository
         key == district_name
       end
     end
-    District.new(district_name, data) if district_exists
+    District.new(district_name, data.fetch(district_name)) if district_exists
   end                                                     # => :find_by_name
 
   def find_all_matching

@@ -1,9 +1,9 @@
-data = [ {:location => "Colorado", :timeframe => "2009", :data => "832368"},  # => {:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}
-{:location => "Colorado", :timeframe => "2010", :data => "543667"},           # => {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}
-{:location => "Arvada", :timeframe => "2009", :data => "765"},                # => {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}
-{:location => "Arvada", :timeframe => "2010", :data => "986"} ]               # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}, {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
+data = [ {:location => "Colorado", :timeframe => "2009", :data => "832368"},
+{:location => "Colorado", :timeframe => "2010", :data => "543667"},
+{:location => "Arvada", :timeframe => "2009", :data => "765"},
+{:location => "Arvada", :timeframe => "2010", :data => "986"} ]
 
-array = []  # => []
+array = []
 
 # data.each do |hash|
 #   if new_district
@@ -12,55 +12,62 @@ array = []  # => []
 #     array[0].fetch("Colorado").fetch(:enrollment)[data[1][:timeframe]] =  data[1][:data]
 #   end
 # end
-grouped = data.group_by do |hash|  # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}, {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
-  hash.fetch(:location)            # => "Colorado", "Colorado", "Arvada", "Arvada"
-end                                # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
+grouped = data.group_by do |hash|
+  hash.fetch(:location)
+end
 
-data_array = grouped.map do |key, hashes|     # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
-  mapped_data = hashes.map do |hash|          # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], [{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
-    [hash[:timeframe], hash[:data]]           # => ["2009", "832368"], ["2010", "543667"], ["2009", "765"], ["2010", "986"]
-  end                                         # => [["2009", "832368"], ["2010", "543667"]], [["2009", "765"], ["2010", "986"]]
-  {key => {:enrollment => mapped_data.to_h}}  # => {"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {"Arvada"=>{:enrollment=>{"2009"=>"765", "2010"=>"986"}}}
-end                                           # => [{"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {"Arvada"=>{:enrollment=>{"2009"=>"765", "2010"=>"986"}}}]
-data_array.each do |hash|                     # => [{"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {"Arvada"=>{:enrollment=>{"2009"=>"765", "2010"=>"986"}}}]
-  selected = hash.select do |key, value|      # => {"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {"Arvada"=>{:enrollment=>{"2009"=>"765", "2010"=>"986"}}}
-    key == "Colorado"                         # => true, false
-  end                                         # => {"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {}
-  selected                                    # => {"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {}
-end                                           # => [{"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}, {"Arvada"=>{:enrollment=>{"2009"=>"765", "2010"=>"986"}}}]
+data_array = grouped.map do |key, hashes|
+  enrollment_data = hashes.map do |hash|
+      mapped_data = hashes.map do |hash|
+        [hash[:timeframe], hash[:data]]
+      end
+      [:enrollment, mapped_data.to_h]
+    end
+    [key, enrollment_data.to_h]
+  end
+data_hash = data_array.to_h
+
+data_hash.fetch('Colorado')
+
+data_array.each do |hash|
+  selected = hash.select do |key, value|
+    key == "Colorado"
+  end
+  selected
+end
 
 
 
 
-data.group_by { |hash| hash.fetch(:location) }                                        # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
+data.group_by { |hash| hash.fetch(:location) }
  .tap { |grouped|
-   grouped                                                                            # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
-  }                                                                                   # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
+   grouped
+  }
  .map { |a, hashes|
-   bs_to_cs = hashes.map { |hash| [hash.fetch(:timeframe), hash.fetch(:data)] }.to_h  # => {"2009"=>"832368", "2010"=>"543667"}, {"2009"=>"765", "2010"=>"986"}
-   [a, bs_to_cs]                                                                      # => ["Colorado", {"2009"=>"832368", "2010"=>"543667"}], ["Arvada", {"2009"=>"765", "2010"=>"986"}]
- }                                                                                    # => [["Colorado", {"2009"=>"832368", "2010"=>"543667"}], ["Arvada", {"2009"=>"765", "2010"=>"986"}]]
- .to_h                                                                                # => {"Colorado"=>{"2009"=>"832368", "2010"=>"543667"}, "Arvada"=>{"2009"=>"765", "2010"=>"986"}}
+   bs_to_cs = hashes.map { |hash| [hash.fetch(:timeframe), hash.fetch(:data)] }.to_h
+   [a, bs_to_cs]
+ }
+ .to_h
 
 
 
-[ {a: 'x', b: 'first',  c: '1'},                                                       # => {:a=>"x", :b=>"first", :c=>"1"}
-  {a: 'y', b: 'second', c: '2'},                                                       # => {:a=>"y", :b=>"second", :c=>"2"}
-  {a: 'x', b: 'third',  c: '3'},                                                       # => {:a=>"x", :b=>"third", :c=>"3"}
-  {a: 'y', b: 'fourth', c: '4'},                                                       # => {:a=>"y", :b=>"fourth", :c=>"4"}
-  {a: 'x', b: 'fifth',  c: '5'},                                                       # => {:a=>"x", :b=>"fifth", :c=>"5"}
-].group_by { |hash| hash.fetch(:a).to_sym }                                            # => {:x=>[{:a=>"x", :b=>"first", :c=>"1"}, {:a=>"x", :b=>"third", :c=>"3"}, {:a=>"x", :b=>"fifth", :c=>"5"}], :y=>[{:a=>"y", :b=>"second", :c=>"2"}, {:a=>"y", :b=>"fourth", :c=>"4"}]}
+[ {a: 'x', b: 'first',  c: '1'},
+  {a: 'y', b: 'second', c: '2'},
+  {a: 'x', b: 'third',  c: '3'},
+  {a: 'y', b: 'fourth', c: '4'},
+  {a: 'x', b: 'fifth',  c: '5'},
+].group_by { |hash| hash.fetch(:a).to_sym }
  .tap { |grouped|
-   grouped                                                                             # => {:x=>[{:a=>"x", :b=>"first", :c=>"1"}, {:a=>"x", :b=>"third", :c=>"3"}, {:a=>"x", :b=>"fifth", :c=>"5"}], :y=>[{:a=>"y", :b=>"second", :c=>"2"}, {:a=>"y", :b=>"fourth", :c=>"4"}]}
-  }                                                                                    # => {:x=>[{:a=>"x", :b=>"first", :c=>"1"}, {:a=>"x", :b=>"third", :c=>"3"}, {:a=>"x", :b=>"fifth", :c=>"5"}], :y=>[{:a=>"y", :b=>"second", :c=>"2"}, {:a=>"y", :b=>"fourth", :c=>"4"}]}
+   grouped
+  }
  .map { |a, hashes|
-   bs_to_cs = hashes.map { |hash| [hash.fetch(:b).to_sym, hash.fetch(:c).to_i] }.to_h  # => {:first=>1, :third=>3, :fifth=>5}, {:second=>2, :fourth=>4}
-   [a, bs_to_cs]                                                                       # => [:x, {:first=>1, :third=>3, :fifth=>5}], [:y, {:second=>2, :fourth=>4}]
- }                                                                                     # => [[:x, {:first=>1, :third=>3, :fifth=>5}], [:y, {:second=>2, :fourth=>4}]]
- .to_h                                                                                 # => {:x=>{:first=>1, :third=>3, :fifth=>5}, :y=>{:second=>2, :fourth=>4}}
+   bs_to_cs = hashes.map { |hash| [hash.fetch(:b).to_sym, hash.fetch(:c).to_i] }.to_h
+   [a, bs_to_cs]
+ }
+ .to_h
 
 
 
 
-grouped              # => {"Colorado"=>[{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}], "Arvada"=>[{:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]}
-grouped["Colorado"]  # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}]
+grouped
+grouped["Colorado"]

@@ -19,7 +19,7 @@ class District
   end
 
   def enrollment
-    Enrollment.new(district_name, data)
+    Enrollment.new(district_name, data.fetch(:enrollment))
   end
 
 

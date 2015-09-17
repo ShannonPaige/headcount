@@ -11,7 +11,7 @@ class Enrollment
   end                                  # => :initialize
 
   def in_year(year)
-    data
+    data[year.to_s]
     #go to repository and look up some data in this year
   end                # => :in_year
 
