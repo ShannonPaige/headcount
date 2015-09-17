@@ -1,73 +1,74 @@
-data = [ {:location => "Colorado", :timeframe => "2009", :data => "832368"},
-{:location => "Colorado", :timeframe => "2010", :data => "543667"},
-{:location => "Arvada", :timeframe => "2009", :data => "765"},
-{:location => "Arvada", :timeframe => "2010", :data => "986"} ]
+data = [ {:location => "Colorado", :race => "asian", :timeframe => "2009", :data => "832368"},
+  {:location => "Colorado", :race => "brown", :timeframe => "2009", :data => "832368"},
+  {:location => "Colorado", :race => "white", :timeframe => "2009", :data => "832368"},
+  {:location => "Colorado", :race => "black", :timeframe => "2009", :data => "832368"},
+{:location => "Colorado", :race => "brown", :timeframe => "2010", :data => "543667"},
+{:location => "Colorado", :race => "asian", :timeframe => "2010", :data => "543667"},
+{:location => "Colorado", :race => "white", :timeframe => "2010", :data => "543667"},
+{:location => "Colorado", :race => "black", :timeframe => "2010", :data => "543667"},
+{:location => "Arvada", :race => "asian", :timeframe => "2009", :data => "765"},
+{:location => "Arvada", :race => "asian", :timeframe => "2010", :data => "986"} ]
 
-array = []
-
-# data.each do |hash|
-#   if new_district
-#     array[0] =  { data[0][:location] => { :enrollment => {  data[0][:timeframe] => data[0][:data]  }  } }
-#   else
-#     array[0].fetch("Colorado").fetch(:enrollment)[data[1][:timeframe]] =  data[1][:data]
-#   end
-# end
+data_hash = {}
 grouped = data.group_by do |hash|
   hash.fetch(:location)
 end
+grouped
 
-data_array = grouped.map do |key, hashes|
-  enrollment_data = hashes.map do |hash|
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe], hash[:data]]
-      end
-      [:enrollment, mapped_data.to_h]
-    end
-    [key, enrollment_data.to_h]
+grouped.each do |district_name, hashes|
+  data_hash[district_name] ||= {}
+  mapped_data = hashes.map do |hash|
+    [hash[:timeframe], hash[:data]]
   end
-data_hash = data_array.to_h
-
-data_hash.fetch('Colorado')
-
-data_array.each do |hash|
-  selected = hash.select do |key, value|
-    key == "Colorado"
+  mapped_data = mapped_data.to_h
+  hashes
+  raced_map = hashes.map do |hash|
+    [hash[:race], mapped_data]
   end
-  selected
+  raced_map.to_h
+data_hash[district_name][:pupil_enrollment_by_race] = raced_map.to_h
 end
 
+data_hash
 
 
+# hash[:race], hash[:timeframe],
+data_hash.fetch('Colorado').fetch(:enrollment).fetch("2009")
 
-data.group_by { |hash| hash.fetch(:location) }
- .tap { |grouped|
-   grouped
-  }
- .map { |a, hashes|
-   bs_to_cs = hashes.map { |hash| [hash.fetch(:timeframe), hash.fetch(:data)] }.to_h
-   [a, bs_to_cs]
- }
- .to_h
-
-
-
-[ {a: 'x', b: 'first',  c: '1'},
-  {a: 'y', b: 'second', c: '2'},
-  {a: 'x', b: 'third',  c: '3'},
-  {a: 'y', b: 'fourth', c: '4'},
-  {a: 'x', b: 'fifth',  c: '5'},
-].group_by { |hash| hash.fetch(:a).to_sym }
- .tap { |grouped|
-   grouped
-  }
- .map { |a, hashes|
-   bs_to_cs = hashes.map { |hash| [hash.fetch(:b).to_sym, hash.fetch(:c).to_i] }.to_h
-   [a, bs_to_cs]
- }
- .to_h
-
-
-
-
-grouped
-grouped["Colorado"]
+#
+#
+#
+#
+#
+# data.group_by { |hash| hash.fetch(:location) }
+#  .tap { |grouped|
+#    grouped
+#   }
+#  .map { |a, hashes|
+#    bs_to_cs = hashes.map { |hash| [hash.fetch(:timeframe), hash.fetch(:data)] }.to_h
+#    [a, bs_to_cs]
+#  }
+#  .to_h
+#
+#
+#
+# [ {a: 'x', b: 'first',  c: '1'},
+#   {a: 'y', b: 'second', c: '2'},
+#   {a: 'x', b: 'third',  c: '3'},
+#   {a: 'y', b: 'fourth', c: '4'},
+#   {a: 'x', b: 'fifth',  c: '5'},
+# ].group_by { |hash| hash.fetch(:a).to_sym }
+#  .tap { |grouped|
+#    grouped
+#   }
+#  .map { |a, hashes|
+#    bs_to_cs = hashes.map { |hash| [hash.fetch(:b).to_sym, hash.fetch(:c).to_i] }.to_h
+#    [a, bs_to_cs]
+#  }
+#  .to_h
+#
+#
+#
+#
+# grouped
+# grouped["Colorado"]
