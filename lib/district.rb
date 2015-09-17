@@ -1,5 +1,5 @@
-require "enrollment"
-require "pry"
+require_relative "enrollment"
+# require "pry"
 
 class District
   attr_accessor :district_name, :data
