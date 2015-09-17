@@ -13,14 +13,13 @@ class DistrictRepository
     data_hash = {}
 
     data = CSV.read(File.join(data_dir, 'Pupil enrollment.csv'), headers: true, header_converters: :symbol).map { |row| row.to_h }
-
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end
     grouped.each do |district_name, hashes|
       data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
-        [hash[:timeframe], hash[:data]]
+        [hash[:timeframe].to_i, hash[:data].to_i]
       end
       data_hash[district_name][:enrollment] = mapped_data.to_h
     end
