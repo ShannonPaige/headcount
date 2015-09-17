@@ -14,13 +14,14 @@ class DistrictRepository
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end
-    if data_dir == './data/Pupil enrollment.csv'
+
       data_array = grouped.map do |key, hashes|
         enrollment_data = hashes.map do |hash|
             mapped_data = hashes.map do |hash|
               [hash[:timeframe], hash[:data]]
             end
-            [:enrollment, mapped_data.to_h]
+            [:enrollment, mapped_data.to_h] if data_dir == './data/Pupil enrollment.csv'
+            [:pupil_enrollment, mapped_data.to_h] if data_dir == './data/Online pupil enrollment.csv'
         end
         [key, enrollment_data.to_h]
       end
