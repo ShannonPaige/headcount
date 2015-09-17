@@ -10,6 +10,11 @@ data = [ {:location => "Colorado", :race => "asian", :timeframe => "2009", :data
 {:location => "Arvada", :race => "asian", :timeframe => "2010", :data => "986"} ]
 
 data_hash = {}
+info = ""
+data.each do |hash|
+  info = hash.keys[1]
+end
+info
 grouped = data.group_by do |hash|
   hash.fetch(:location)
 end
@@ -17,6 +22,7 @@ grouped
 
 grouped.each do |district_name, hashes|
   data_hash[district_name] ||= {}
+  hashes
   mapped_data = hashes.map do |hash|
     [hash[:timeframe], hash[:data]]
   end
