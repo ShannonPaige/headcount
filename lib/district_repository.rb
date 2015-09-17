@@ -10,20 +10,21 @@ class DistrictRepository
   end
 
   def self.load_from_csv(data_dir)
+    data_hash = {}
+
     data = CSV.read(File.join(data_dir, 'Pupil enrollment.csv'), headers: true, header_converters: :symbol).map { |row| row.to_h }
 
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end
-
-    data_array = grouped.map do |key, hashes|
+    grouped.each do |district_name, hashes|
+      data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
         [hash[:timeframe], hash[:data]]
       end
-      [key, {enrollment: mapped_data.to_h}]
+      data_hash[district_name][:enrollment] = mapped_data.to_h
     end
 
-    data_hash = data_array.to_h
     DistrictRepository.new(data_hash)
   end
 
