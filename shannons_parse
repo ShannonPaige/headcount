@@ -1,0 +1,15 @@
+data = [ {:location => "Colorado", :timeframe => "2009", :data => "832368"},  # => {:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}
+{:location => "Colorado", :timeframe => "2010", :data => "543667"},           # => {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}
+{:location => "Arvada", :timeframe => "2009", :data => "765"},                # => {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}
+{:location => "Arvada", :timeframe => "2010", :data => "986"} ]               # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}, {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
+
+array = []                                                                                                 # => []
+data.each do |hash|                                                                                        # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}, {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
+  if array != []                                                                                           # => false, true, true, true
+      array[0].fetch("Colorado").fetch(:enrollment)[data[1][:timeframe]] =  data[1][:data]                 # => "543667", "543667", "543667"
+  else
+    array[0] =  { data[0][:location] => { :enrollment => {  data[0][:timeframe] => data[0][:data]  }  } }  # => {"Colorado"=>{:enrollment=>{"2009"=>"832368"}}}
+  end                                                                                                      # => {"Colorado"=>{:enrollment=>{"2009"=>"832368"}}}, "543667", "543667", "543667"
+end                                                                                                        # => [{:location=>"Colorado", :timeframe=>"2009", :data=>"832368"}, {:location=>"Colorado", :timeframe=>"2010", :data=>"543667"}, {:location=>"Arvada", :timeframe=>"2009", :data=>"765"}, {:location=>"Arvada", :timeframe=>"2010", :data=>"986"}]
+
+array  # => [{"Colorado"=>{:enrollment=>{"2009"=>"832368", "2010"=>"543667"}}}]
