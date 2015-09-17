@@ -1,4 +1,3 @@
-require "district_repository"
 
 class Enrollment
   attr_accessor :district_name, :data
