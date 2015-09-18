@@ -20,8 +20,7 @@ class DistrictRepositoryTest < Minitest::Test
 
 
   def test_returns_nil_if_district_doesnt_exist
-    skip
-    dr = DistrictRepository.load_from_csv('./data/Pupil enrollment.csv')
+    dr = DistrictRepository.load_from_csv(data_dir)
     assert_nil dr.find_by_name("Shannon")
   end
 

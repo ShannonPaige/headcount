@@ -10,7 +10,7 @@ class DistrictRepository
   end
 
   def self.parse_data_type_1(data_dir, data_hash, file)
-    filename = file.gsub('.csv', "").gsub(" ", '_').downcase.to_sym
+    filename = file.gsub('.csv', "").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
     grouped = data.group_by do |hash|
       hash.fetch(:location)
@@ -25,7 +25,7 @@ class DistrictRepository
   end
 
   def self.parse_data_type_2(data_dir, data_hash, file)
-    filename = file.gsub('.csv', "").gsub(" ", '_').downcase.to_sym
+    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
     info = ""
     data.each do |hash|
@@ -69,10 +69,9 @@ class DistrictRepository
 
 
   def find_by_name(district_name)
-    district_exists = data.any? do |hash|
-      hash.each do |key, value|
-        key == district_name
-      end
+    district_names = data.keys # => ["Colorado", "ACADEMY 20", "ADAMS COUNTY 14", "ADAMS-ARAPAHOE 28J", "AGATE 300", "AGUILAR REORGANIZED 6", "AKRON R-1", "ALAMOSA RE-11J", "ARCHULETA COUNTY 50 JT", "ARICKAREE R-2", "ARRIBA-FLAGLER C-20", "ASPEN 1", "AULT-HIGHLAND RE-9", "BAYFIELD 10 JT-R", "BENNETT 29J", "BETHUNE R-5", "BIG SANDY 100J", "BOULDER VALLEY RE 2", "BRANSON REORGANIZED 82", "BRIGGSDALE RE-10", "BRIGHTON 27J", "BRUSH RE-2(J)", "BUENA VISTA R-31", "BUFFALO RE-4", "BURLINGTON RE-6J", "BYERS 32J", "CALHAN RJ-1", "CAMPO RE-6", "CANON CITY RE-1", "CENTENNIAL R-1", "CENTER 26 JT", "CHERAW 31", "CHERRY CREEK 5", "CHEYENNE COUNTY RE-5", "CHEYENNE MOUNTAIN 12", "CLEAR CREEK RE-1", "COLORADO SPRINGS 11", "COTOPAXI RE-3", "CREEDE CONSOLIDATED 1", "CRIPPLE CREEK-VICTOR RE-1", "CROWLEY COUNTY RE-1-J", "CUSTER COUNTY SCHOOL DISTRICT C-1", "DE BEQUE 49JT", "DEER TRAIL 26J", "DEL NORTE C-7", "DELTA COUNTY 50(J)", "DENVER COUNTY 1", "DOLORES COUNTY RE NO.2", "DOLORES RE-4A", "DOUGLAS COUN...
+    district_exists = district_names.any? do |name|
+      name == district_name
     end
     District.new(district_name, data.fetch(district_name)) if district_exists
   end
@@ -84,6 +83,13 @@ class DistrictRepository
 end
 
 if $PROGRAM_NAME == __FILE__
-  dr = DistrictRepository.load_from_csv('../data/Pupil enrollment.csv')
-  district = dr.find_by_name("ACADEMY 20")
+  data_dir = File.expand_path '../data', __dir__
+  dr = DistrictRepository.load_from_csv(data_dir)
+  district = dr.find_by_name("Shannon").district_name # ~> NoMethodError: undefined method `district_name' for nil:NilClass
+  # =>
 end
+
+# ~> NoMethodError
+# ~> undefined method `district_name' for nil:NilClass
+# ~>
+# ~> /Users/shannonpaige/code/headcount/lib/district_repository.rb:89:in `<main>'

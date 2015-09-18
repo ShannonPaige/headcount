@@ -7,7 +7,10 @@ class StatewideTesting
   def proficient_by_grade(grade)
   # grade as an integer from the following set: [3, 4, 8]
   # A call to this method with an unknown grade should raise a UnknownDataError.
-
+  # if grade ==3
+  #   data[:3rd_grade_strudents...][:score]
+  # else
+  #   data[:8th_grade_st....][:score]
   # The method returns a hash grouped by year referencing percentages by subject
   #all as three digit floats.
   end
