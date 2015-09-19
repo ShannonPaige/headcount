@@ -1,50 +1,45 @@
-data = [ {:location => "Colorado", :race => "asian", :timeframe => "2009", :data => "832368"},
-  {:location => "Colorado", :race => "brown", :timeframe => "2009", :data => "832368"},
-  {:location => "Colorado", :race => "white", :timeframe => "2009", :data => "832368"},
-  {:location => "Colorado", :race => "black", :timeframe => "2009", :data => "832368"},
-{:location => "Colorado", :race => "brown", :timeframe => "2010", :data => "543667"},
-{:location => "Colorado", :race => "asian", :timeframe => "2010", :data => "543667"},
-{:location => "Colorado", :race => "white", :timeframe => "2010", :data => "543667"},
-{:location => "Colorado", :race => "black", :timeframe => "2010", :data => "543667"},
-{:location => "Arvada", :race => "asian", :timeframe => "2009", :data => "765"},
-{:location => "Arvada", :race => "asian", :timeframe => "2010", :data => "986"} ]
+data = [ {:location => "Colorado", :race => "asian", :timeframe => "2009", :dataformat => "Number", :data => "1"},
+  {:location => "Colorado", :race => "brown", :timeframe => "2009", :dataformat => "Number", :data => "2"},
+  {:location => "Colorado", :race => "white", :timeframe => "2009", :dataformat => "Number", :data => "3"},
+  {:location => "Colorado", :race => "black", :timeframe => "2009", :dataformat => "Number", :data => "4"},
+{:location => "Colorado", :race => "brown", :timeframe => "2010", :dataformat => "Number", :data => "5"},
+{:location => "Colorado", :race => "asian", :timeframe => "2010", :dataformat => "Number", :data => "6"},
+{:location => "Colorado", :race => "white", :timeframe => "2010", :dataformat => "Number", :data => "7"},
+{:location => "Colorado", :race => "black", :timeframe => "2010", :dataformat => "Number", :data => "8"},
+{:location => "Arvada", :race => "asian", :timeframe => "2009", :dataformat => "Number", :data => "9"},
+{:location => "Arvada", :race => "asian", :timeframe => "2010", :dataformat => "Number", :data => "10"} ]
 
-data_hash = {}
+data_hash ={}
 info = ""
 data.each do |hash|
   info = hash.keys[1]
 end
-info
-grouped = data.group_by do |hash|
+grouped_by_district = data.group_by do |hash|
   hash.fetch(:location)
 end
-grouped
-
-grouped.each do |district_name, hashes|
+grouped_by_district.each do |district_name, hashes|
   data_hash[district_name] ||= {}
-  hashes
-  mapped_data = hashes.map do |hash|
-    [hash[:timeframe], hash[:data]]
+  data_hash[district_name][:filename] ||= {}
+  info_map = []
+  grouped_by_info = hashes.group_by do |hash|
+    hash.fetch(info)
   end
-  mapped_data = mapped_data.to_h
-  hashes
-  raced_map = hashes.map do |hash|
-    [hash[:race], mapped_data]
+  grouped_by_info.each do |info_type, hashes|
+    data_hash[district_name][:filename][info_type] ||= {}
+    mapped_data = hashes.map do |hash|
+      if hash[:dataformat] == "Number"
+        [hash[:timeframe].to_i, hash[:data].to_i]
+      else
+        [hash[:timeframe].to_i, hash[:data].to_f]
+      end
+    end
+    data_hash[district_name][:filename][info_type] = mapped_data.to_h
   end
-  raced_map.to_h
-data_hash[district_name][:pupil_enrollment_by_race] = raced_map.to_h
 end
 
+
+
 data_hash
-
-
-
-
-# hash[:race], hash[:timeframe],
-data_hash.fetch('Colorado').fetch(:enrollment).fetch("2009")
-
-#
-#
 #
 #
 #

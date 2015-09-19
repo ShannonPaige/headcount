@@ -1,11 +1,29 @@
 require "enrollment"
+
 class EnrollmentTest < Minitest::Test
+
+  def setup
+    @dr = DistrictRepository.load_from_csv(data_dir)
+    @district = @dr.find_by_name("ACADEMY 20")
+    @enrollment_instance = @district.enrollment
+  end
+
+  def data_dir
+    File.expand_path '../data', __dir__
+  end
+
+  def test_returns_enrollment_number_in_a_given_year
+    assert_equal 22620, @enrollment_instance.in_year(2009)
+  end
+
   def test_returns_dropout_rate_in_given_year
     skip
+    # assert_equal .002, @enrollment_instance.dropout_rate_in_year(2011)
   end
 
   def test_returns_dropout_rate_by_gender_in_given_year
     skip
+    # assert_equal .002, @enrollment_instance.dropout_rate_in_year(2011)
   end
 
   def test_returns_hash_of_dropout_rate_by_race_in_year

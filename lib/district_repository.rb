@@ -18,7 +18,11 @@ class DistrictRepository
     grouped.each do |district_name, hashes|
       data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_i]
+        if hash[:dataformat] == "Number"
+          [hash[:timeframe].to_i, hash[:data].to_i]
+        else
+          [hash[:timeframe].to_i, hash[:data].to_f]
+        end
       end
       data_hash[district_name][filename] = mapped_data.to_h
     end
@@ -31,19 +35,27 @@ class DistrictRepository
     data.each do |hash|
       info = hash.keys[1]
     end
-    grouped = data.group_by do |hash|
+    grouped_by_district = data.group_by do |hash|
       hash.fetch(:location)
     end
-    grouped.each do |district_name, hashes|
+    grouped_by_district.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_i]
+      data_hash[district_name][filename] ||= {}
+      info_map = []
+      grouped_by_info = hashes.group_by do |hash|
+        hash.fetch(info)
       end
-      mapped_data = mapped_data.to_h
-      info_map = hashes.map do |hash|
-        [hash[info], mapped_data]
+      grouped_by_info.each do |info_type, hashes|
+        data_hash[district_name][filename][info_type] ||= {}
+        mapped_data = hashes.map do |hash|
+          if hash[:dataformat] == "Number"
+            [hash[:timeframe].to_i, hash[:data].to_i]
+          else
+            [hash[:timeframe].to_i, hash[:data].to_f]
+          end
+        end
+        data_hash[district_name][filename][info_type] = mapped_data.to_h
       end
-    data_hash[district_name][filename] = info_map.to_h
     end
   end
 
@@ -187,6 +199,7 @@ class DistrictRepository
     parse_data_type_4(data_dir, data_hash, 'Pupil enrollment by race_ethnicity.csv')
     parse_data_type_5(data_dir, data_hash, 'Students qualifying for free or reduced price lunch.csv')
 
+    require "pry"; binding.pry
     DistrictRepository.new(data_hash)
   end
 
