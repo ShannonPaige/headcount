@@ -1,5 +1,5 @@
 class StatewideTesting
-  def initialize(district_name)
+  def initialize(district_name, data)
     # An instance this class can be initialized by supplying the name of the
     #district which is then used to find the matching data in the data files.
   end

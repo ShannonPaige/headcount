@@ -199,7 +199,6 @@ class DistrictRepository
     parse_data_type_4(data_dir, data_hash, 'Pupil enrollment by race_ethnicity.csv')
     parse_data_type_5(data_dir, data_hash, 'Students qualifying for free or reduced price lunch.csv')
 
-    require "pry"; binding.pry
     DistrictRepository.new(data_hash)
   end
 

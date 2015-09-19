@@ -17,33 +17,52 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_dropout_rate_in_given_year
-    skip
-    # assert_equal .002, @enrollment_instance.dropout_rate_in_year(2011)
+    assert_equal 0.002, @enrollment_instance.dropout_rate_in_year(2011)
   end
 
   def test_returns_dropout_rate_by_gender_in_given_year
     skip
-    # assert_equal .002, @enrollment_instance.dropout_rate_in_year(2011)
+    expected = {:female => 0.002, :male => 0.002}
+    assert_equal expected, @enrollment_instance.dropout_rate_by_gender_in_year(2012)
   end
 
   def test_returns_hash_of_dropout_rate_by_race_in_year
     skip
+    expected = {
+    :asian => 0.001,
+    :black => 0.001,
+    :pacific_islander => 0.001,
+    :hispanic => 0.001,
+    :native_american => 0.001,
+    :two_or_more => 0.001,
+    :white => 0.001
+  }
+    assert_equal expected, @enrollment_instance.dropout_rate_by_race_in_year(2012)
   end
 
   def test_returns_dropout_hash_by_year_distributed_by_race
     skip
+    expected = {
+      2011 => 0.047,
+      2012 => 0.041
+    }
+    assert_equal expected, @enrollment_instance.dropout_rate_for_race_or_ethnicity(:asian)
   end
 
   def enddropout_rate_for_race_or_ethnicity_in_year(race, year)
-  # race as a symbol from the following set: [:asian, :black, :pacific_islander,
-  #:hispanic, :native_american, :two_or_more, :white]
-  # year as an integer for any year reported in the data
-  #A call to this method with any unknown year should return nil.
+    skip
+    assert_equal 0.001, @enrollment_instance.dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
   end
 
   def graduation_rate_by_year
-    # method returns a hash with years as keys and a truncated three-digit
-    #floating point number representing a percentage.
+    skip
+    expected = {2010 => 0.895,
+      2011 => 0.895,
+      2012 => 0.889,
+      2013 => 0.913,
+      2014 => 0.898,
+    }
+    assert_equal expected, @enrollment_instance.graduation_rate_by_year
   end
 
   def graduation_rate_in_year(year)

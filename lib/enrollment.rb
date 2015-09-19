@@ -13,7 +13,7 @@ class Enrollment
   def dropout_rate_in_year(year)
   # year as an integer for any year reported in the data
   # A call to this method with any unknown year should return nil.
-    # data[:dropout_rates_by_race_and_ethnicity]["All Students"][year].round(3)
+    data[:dropout_rates_by_race_and_ethnicity]["All Students"][year].round(3)
   # The method returns a truncated three-digit floating point number representing
   #a percentage.
   end
