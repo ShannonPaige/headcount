@@ -1,7 +1,6 @@
 require "enrollment"
 
 class EnrollmentTest < Minitest::Test
-
   def setup
     @dr = DistrictRepository.load_from_csv(data_dir)
     @district = @dr.find_by_name("ACADEMY 20")
