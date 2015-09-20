@@ -203,6 +203,7 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
+    district_name = District.name(district_name)
     district_names = data.keys
     district_exists = district_names.any? do |name|
       name == district_name

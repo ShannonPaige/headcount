@@ -28,15 +28,14 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_dropout_rate_percents_by_race_in_given_year
-    skip
     expected = {
-    :asian => 0.001,
-    :black => 0.001,
-    :pacific_islander => 0.001,
-    :hispanic => 0.001,
-    :native_american => 0.001,
-    :two_or_more => 0.001,
-    :white => 0.001
+    :asian => 0.007,
+    :black => 0.002,
+    :pacific_islander => 0,
+    :hispanic => 0.006,
+    :native_american => 0.036,
+    :two_or_more => 0,
+    :white => 0.004
   }
     assert_equal expected, @enrollment_instance.dropout_rate_by_race_in_year(2012)
     assert_nil @enrollment_instance.dropout_rate_by_race_in_year(1912)
