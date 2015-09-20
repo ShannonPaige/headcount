@@ -3,10 +3,14 @@ require_relative "district"
 # require "pry"
 
 class DistrictRepository
-  attr_accessor :data
+  attr_accessor :data, :districts
 
   def initialize(data)
     @data = data
+    @districts = {}
+    data.each do |district_name, hash|
+      @districts[district_name] = District.new(district_name, data.fetch(district_name))
+    end
   end
 
   def self.parse_data_type_1(data_dir, data_hash, file)
@@ -204,14 +208,22 @@ class DistrictRepository
 
   def find_by_name(district_name)
     district_name = District.name(district_name)
-    district_names = data.keys
-    district_exists = district_names.any? do |name|
-      name == district_name
-    end
-    District.new(district_name, data.fetch(district_name)) if district_exists
+    @districts[district_name]
+    # district_names = data.keys
+    # district_exists = district_names.any? do |name|
+    #   name == district_name
+    # end
+    # District.new(district_name, data.fetch(district_name)) if district_exists
   end
 
-  def find_all_matching
+  def find_all_matching(name_fragment)
+    matching = []
+    district_names = @districts.keys
+
+    district_names.each do |name|
+      matching << @districts[name] if name.include? name_fragment.upcase
+    end
+    matching
 
   end
 

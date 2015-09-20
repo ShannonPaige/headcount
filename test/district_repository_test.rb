@@ -23,16 +23,17 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_returns_district_with_given_name___case_insensitive
+    assert_equal @district, @dr.find_by_name("academy 20")
     assert_equal "ACADEMY 20", @dr.find_by_name("academy 20").district_name
   end
 
   def test_returns_empty_array_if_no_districts_match_supplied_name_fragment
-    skip
+    assert_equal [], @dr.find_all_matching("Shannon")
   end
 
-  def test_returns_all_districts_which_match_supplied_name_fragment
-    skip
+  def test_returns_all_districts_which_match_supplied_name_fragment__case_insensitive
+    @academy20 = @dr.find_by_name("ACADEMY 20")
+    @ignacio = @dr.find_by_name("IGNACIO 11 JT")
+    assert_equal [@academy20, @ignacio], @dr.find_all_matching("ac")
   end
-
-
 end
