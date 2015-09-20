@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require "district_repository"
 
-class DistrictTest < Minitest::Test
+class EconomicProfileTest < Minitest::Test
 
   def test_median_household_income
     skip

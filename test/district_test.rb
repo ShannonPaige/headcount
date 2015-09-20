@@ -1,4 +1,4 @@
-require "district_repository"
+require "district"
 
 class DistrictTest < Minitest::Test
 

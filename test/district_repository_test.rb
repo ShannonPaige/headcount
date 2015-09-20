@@ -1,6 +1,3 @@
-
-require 'minitest/autorun'
-require 'minitest/pride'
 require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test
