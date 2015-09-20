@@ -68,63 +68,61 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_graduation_rate_percent_in_given_year
-    skip
     assert_equal 0.895, @enrollment_instance.graduation_rate_in_year(2010)
     assert_nil @enrollment_instance.graduation_rate_in_year(1910)
   end
 
   def test_returns_kindergarten_participation_percents_by_year
-    skip
-    expected = {2010 => 0.391,
-      2011 => 0.353,
-      2012 => 0.267,
-      2013 => 0.487,
-      2014 => 0.490,
+    expected = {2004 => 0.30201,
+      2005 => 0.26709,
+      2006 => 0.35364,
+      2007 => 0.39159,
+      2008 => 0.38456,
+      2009 => 0.39,
+      2010 => 0.43628,
+      2011 => 0.489,
+      2012 => 0.47883,
+      2013 => 0.48774,
+      2014 => 0.49022,
     }
     assert_equal expected, @enrollment_instance.kindergarten_participation_by_year
   end
 
   def test_returns_kindergarten_participation_percent_in_given_year
-    skip
-    assert_equal 0.391, @enrollment_instance.kindergarten_participation_in_year(2010)
+    assert_equal 0.43628, @enrollment_instance.kindergarten_participation_in_year(2010)
     assert_nil @enrollment_instance.kindergarten_participation_in_year(1910)
   end
 
   def test_returns_online_participation_numbers_by_year
-    skip
-    expected = {2010 => 16,
-      2011 => 18,
-      2012 => 24,
-      2013 => 32,
-      2014 => 40,
+    expected = {2011 => 33,
+      2012 => 35,
+      2013 => 341,
     }
     assert_equal expected, @enrollment_instance.online_participation_by_year
   end
 
   def test_returns_online_participation_number_in_given_year
-    skip
-    assert_equal 33, @enrollment_instance.online_participation_in_year(2013)
-    assert_nil @enrollment_instance.online_participation_in_year(1913)
+    assert_equal 33, @enrollment_instance.online_participation_in_year(2011)
+    assert_nil @enrollment_instance.online_participation_in_year(1911)
   end
 
   def test_returns_participation_numbers_by_year
-    skip
     expected = {2009 => 22620,
-      2010 => 22620,
-      2011 => 23119,
-      2012 => 23657,
-      2013 => 23973,
+      2010 => 23119,
+      2011 => 23657,
+      2012 => 23973,
+      2013 => 24481,
       2014 => 24578,
     }
-    assert_equal expected, enrollment.participation_by_year
+    assert_equal expected, @enrollment_instance.participation_by_year
   end
 
   def test_returns_participation_number_in_given_year
-    skip
-    assert_equal 23973, enrollment.participation_in_year(2013)
-    assert_nil enrollment.participation_in_year(1913)
+    assert_equal 24481, @enrollment_instance.participation_in_year(2013)
+    assert_nil @enrollment_instance.participation_in_year(1913)
   end
 
+  #TODO Need this file added to hash
   def test_returns_participation_percents_by_year_for_given_race
     skip
     expected = {
@@ -134,7 +132,7 @@ class EnrollmentTest < Minitest::Test
       2014 => 0.056
     }
     assert_equal expected, @enrollment_instance.participation_by_race_or_ethnicity(:asian)
-    assert_equal UnknownRaceError, @enrollment_instance.participation_by_race_or_ethnicity(:wookiee)
+    #assert_equal UnknownRaceError, @enrollment_instance.participation_by_race_or_ethnicity(:wookiee)
   end
 
   def test_returns_participation_percents_by_race_in_given_year
@@ -155,33 +153,31 @@ class EnrollmentTest < Minitest::Test
   def test_returns_special_education_participation_percents_by_year
     skip
     expected = {2009 => 0.075,
-      2010 => 0.078,
-      2011 => 0.072,
-      2012 => 0.071,
-      2013 => 0.070,
-      2014 => 0.068,
+      2010 => 0.07829,
+      2011 => 0.079,
+      2012 => 0.078,
+      2013 => 0.07912,
+      2014 => 0.07942,
     }
-    assert_equal = expected, @enrollment_instance.special_education_by_year
+    assert_equal expected, @enrollment_instance.special_education_by_year
   end
 
   def test_returns_special_education_participation_percent_in_given_year
     skip
-    assert_equal 0.105, @enrollment_instance.special_education_in_year(2013)
-    assert_nil @enrollment_instance.special_education_in_year(1913)
+    assert_equal 0.079, @enrollment_instance.special_education_in_year(2011)
+    assert_nil @enrollment_instance.special_education_in_year(1911)
   end
 
   def test_returns_remediation_percents_by_year
-    skip
-    expected = {2009 => 0.232,
-      2010 => 0.251,
-      2011 => 0.278
+    expected = {2009 => 0.264,
+      2010 => 0.294,
+      2011 => 0.263
     }
     assert_equal expected, @enrollment_instance.remediation_by_year
   end
 
   def test_returns_remediation_percent_in_given_year
-    skip
-    assert_equal 0.250, @enrollment_instance.remediation_in_year(2010)
-    assert_nil @enrollment_instance.remediation_in_year(2010)
+    assert_equal 0.294, @enrollment_instance.remediation_in_year(2010)
+    assert_nil @enrollment_instance.remediation_in_year(1910)
   end
 end

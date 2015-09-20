@@ -29,7 +29,7 @@ class District
   def enrollment
     files_used_in_enrollment = [:dropout_rates_by_race_and_ethnicity, :high_school_graduation_rates,
 :kindergartners_in_full_day_program, :online_pupil_enrollment,
-:pupil_enrollment_by_race_ethnicity, :pupil_enrollment,
+:pupil_enrollment_by_race_ethnicity_by_percentage, :pupil_enrollment,
 :special_education, :remediation_in_higher_education]
     enrollment_data = data.select do |key, value|
       files_used_in_enrollment.include? key
