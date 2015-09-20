@@ -92,12 +92,6 @@ end
 
   def participation_by_race_or_ethnicity_in_year(year)
     data[:pupil_enrollment_by_race_ethnicity_by_percentage][year]
-  # This method takes one parameter:
-
-  #year as an integer for any year reported in the data
-  #A call to this method with any unknown year should return nil.
-
-  #The method returns a hash with race markers as keys and a three-digit floating point number representing a percentage.
   end
 
   def special_education_by_year
@@ -105,7 +99,7 @@ end
   end
 
   def special_education_in_year(year)
-    data[:special_education][percentage][year]
+    data[:special_education_by_percentage][year]
   end
 
   def remediation_by_year

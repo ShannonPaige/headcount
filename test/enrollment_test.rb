@@ -149,7 +149,6 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_special_education_participation_percents_by_year
-    skip
     expected = {2009 => 0.075,
       2010 => 0.07829,
       2011 => 0.079,
@@ -161,7 +160,6 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_special_education_participation_percent_in_given_year
-    skip
     assert_equal 0.079, @enrollment_instance.special_education_in_year(2011)
     assert_nil @enrollment_instance.special_education_in_year(1911)
   end
