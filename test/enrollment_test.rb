@@ -58,8 +58,8 @@ class EnrollmentTest < Minitest::Test
   def test_returns_graduation_rate_percents_by_year
     expected = {2010 => 0.895,
       2011 => 0.895,
-      2012 => 0.88983,
-      2013 => 0.91373,
+      2012 => 0.889,
+      2013 => 0.913,
       2014 => 0.898,
     }
     assert_equal expected, @enrollment_instance.graduation_rate_by_year
@@ -71,23 +71,23 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_kindergarten_participation_percents_by_year
-    expected = {2004 => 0.30201,
-      2005 => 0.26709,
-      2006 => 0.35364,
-      2007 => 0.39159,
-      2008 => 0.38456,
+    expected = {2004 => 0.302,
+      2005 => 0.267,
+      2006 => 0.353,
+      2007 => 0.391,
+      2008 => 0.384,
       2009 => 0.39,
-      2010 => 0.43628,
+      2010 => 0.436,
       2011 => 0.489,
-      2012 => 0.47883,
-      2013 => 0.48774,
-      2014 => 0.49022,
+      2012 => 0.478,
+      2013 => 0.487,
+      2014 => 0.490,
     }
     assert_equal expected, @enrollment_instance.kindergarten_participation_by_year
   end
 
   def test_returns_kindergarten_participation_percent_in_given_year
-    assert_equal 0.43628, @enrollment_instance.kindergarten_participation_in_year(2010)
+    assert_equal 0.436, @enrollment_instance.kindergarten_participation_in_year(2010)
     assert_nil @enrollment_instance.kindergarten_participation_in_year(1910)
   end
 
@@ -150,11 +150,11 @@ class EnrollmentTest < Minitest::Test
 
   def test_returns_special_education_participation_percents_by_year
     expected = {2009 => 0.075,
-      2010 => 0.07829,
+      2010 => 0.0782,
       2011 => 0.079,
       2012 => 0.078,
-      2013 => 0.07912,
-      2014 => 0.07942,
+      2013 => 0.079,
+      2014 => 0.079,
     }
     assert_equal expected, @enrollment_instance.special_education_by_year
   end
