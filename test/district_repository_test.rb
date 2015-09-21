@@ -18,21 +18,21 @@ class DistrictRepositoryTest < Minitest::Test
     # assert_equal 0.857, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
   end
 
-  def test_returns_nil_if_district_doesnt_exist
-    assert_nil @dr.find_by_name("Shannon")
-  end
-
-  def test_returns_district_with_given_name___case_insensitive
-    assert_equal "ACADEMY 20", @dr.find_by_name("academy 20").district_name
-  end
-
-  def test_returns_empty_array_if_no_districts_match_supplied_name_fragment
-    skip
-  end
-
-  def test_returns_all_districts_which_match_supplied_name_fragment
-    skip
-  end
+  # def test_returns_nil_if_district_doesnt_exist
+  #   assert_nil @dr.find_by_name("Shannon")
+  # end
+  #
+  # def test_returns_district_with_given_name___case_insensitive
+  #   assert_equal "ACADEMY 20", @dr.find_by_name("academy 20").district_name
+  # end
+  #
+  # def test_returns_empty_array_if_no_districts_match_supplied_name_fragment
+  #   skip
+  # end
+  #
+  # def test_returns_all_districts_which_match_supplied_name_fragment
+  #   skip
+  # end
 
 
 end
