@@ -172,7 +172,6 @@ class DistrictRepository
     group_by_percent.each do |district_name, hashes|
       data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
-        hash[:data].to_f
         [hash[:timeframe].to_i, hash[:data].to_f]
       end
       mapped_data = mapped_data.to_h
@@ -180,6 +179,72 @@ class DistrictRepository
         [hash[:poverty_level], mapped_data]
       end
     data_hash[district_name][filename] = info_map.to_h
+    end
+  end
+
+  def self.parse_data_type_6(data_dir, data_hash, file)
+    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
+    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    info = ""
+    data.each do |hash|
+      info = hash.keys[2]
+    end
+    info
+    grouped_by_district = data.group_by do |hash|
+      hash.fetch(:location)
+    end
+    grouped_by_district.each do |district_name, hashes|
+      data_hash[district_name] ||= {}
+      data_hash[district_name][filename] ||= {}
+      info_map = []
+      grouped_by_info = hashes.group_by do |hash|
+        hash.fetch(info).to_i
+      end
+      grouped_by_info
+      grouped_by_info.each do |info_type, hashes|
+        data_hash[district_name][filename][info_type] ||= {}
+        mapped_data = hashes.map do |hash|
+          if hash[:dataformat] == "Number"
+            [hash[:score].downcase.to_sym, hash[:data].to_i]
+          else
+            [hash[:score].downcase.to_sym, hash[:data].to_f.round(3)]
+          end
+        end
+        data_hash[district_name][filename][info_type] = mapped_data.to_h
+      end
+    end
+  end
+
+  def self.parse_data_type_7(data_dir, data_hash, file)
+    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
+    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    info = ""
+    data.each do |hash|
+      info = hash.keys[2]
+    end
+    info
+    grouped_by_district = data.group_by do |hash|
+      hash.fetch(:location)
+    end
+    grouped_by_district.each do |district_name, hashes|
+      data_hash[district_name] ||= {}
+      data_hash[district_name][filename] ||= {}
+      info_map = []
+      grouped_by_info = hashes.group_by do |hash|
+        hash.fetch(info).to_sym
+      end
+      grouped_by_info
+      grouped_by_info.each do |info_type, hashes|
+        data_hash[district_name][filename][info_type] ||= {}
+        mapped_data = hashes.map do |hash|
+          if hash[:dataformat] == "Number"
+            [hash[:race_ethnicity].downcase.to_s, hash[:data].to_i]
+          else
+            [hash[:race_ethnicity].downcase.to_s, hash[:data].to_f.round(3)]
+          end
+        end
+        data_hash[district_name][filename][info_type] = mapped_data.to_h
+      end
     end
   end
 
@@ -192,11 +257,11 @@ class DistrictRepository
     parse_data_type_1(data_dir, data_hash, 'Median household income.csv')
     parse_data_type_1(data_dir, data_hash, 'Remediation in higher education.csv')
     parse_data_type_1(data_dir, data_hash, 'Title I students.csv')
-    parse_data_type_2(data_dir, data_hash, '3rd grade students scoring proficient or above on the CSAP_TCAP.csv')
-    parse_data_type_2(data_dir, data_hash, '8th grade students scoring proficient or above on the CSAP_TCAP.csv')
-    parse_data_type_2(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv')
-    parse_data_type_2(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv')
-    parse_data_type_2(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv')
+    parse_data_type_6(data_dir, data_hash, '3rd grade students scoring proficient or above on the CSAP_TCAP.csv')
+    parse_data_type_6(data_dir, data_hash, '8th grade students scoring proficient or above on the CSAP_TCAP.csv')
+    parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv')
+    parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv')
+    parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv')
     parse_data_type_2(data_dir, data_hash, 'Dropout rates by race and ethnicity.csv')
     parse_data_type_3(data_dir, data_hash, 'Special education.csv')
     parse_data_type_3(data_dir, data_hash, 'School-aged children in poverty.csv')
