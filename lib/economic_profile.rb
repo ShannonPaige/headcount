@@ -5,7 +5,7 @@ class EconomicProfile
     # An instance this class can be initialized by supplying the name of the
     #district which is then used to find the matching data in the data files.
     @district_name = district_name
-    @data = data
+    @data ||= data
   end
 
   def free_or_reduced_lunch_by_year

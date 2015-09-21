@@ -1,12 +1,12 @@
 require "csv"
-require_relative "district"
+require "district"
 # require "pry"
 
 class DistrictRepository
   attr_accessor :data, :districts
 
   def initialize(data)
-    @data = data
+    @data ||= data
     @districts = {}
     data.each do |district_name, hash|
       @districts[district_name] = District.new(district_name, data.fetch(district_name))
@@ -248,7 +248,7 @@ class DistrictRepository
     end
   end
 
-  def self.load_from_csv(data_dir)
+  def self.from_csv(data_dir)
     data_hash = {}
     parse_data_type_1(data_dir, data_hash, 'Pupil enrollment.csv')
     parse_data_type_1(data_dir, data_hash, 'Online pupil enrollment.csv')
@@ -294,8 +294,8 @@ class DistrictRepository
 
 end
 
-if $PROGRAM_NAME == __FILE__
-  data_dir = File.expand_path '../data', __dir__
-  dr = DistrictRepository.load_from_csv(data_dir)
-  district = dr.find_by_name("Shannon").district_name
-end
+# if $PROGRAM_NAME == __FILE__
+#   data_dir = File.expand_path '../data', __dir__
+#   dr = DistrictRepository.from_csv(data_dir)
+#   district = dr.find_by_name("Shannon").district_name
+# end

@@ -2,7 +2,7 @@ require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test
   def setup
-    @dr = DistrictRepository.load_from_csv(data_dir)
+    @dr ||= DistrictRepository.from_csv(data_dir)
     @district = @dr.find_by_name("ACADEMY 20")
   end
 
