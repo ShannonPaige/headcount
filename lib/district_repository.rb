@@ -39,24 +39,17 @@ class DistrictRepository
   end
 
   def find_by_name(district_name)
-    district_name = District.name(district_name)
+    district_name = district_name.upcase
     @districts[district_name]
-    # district_names = data.keys
-    # district_exists = district_names.any? do |name|
-    #   name == district_name
-    # end
-    # District.new(district_name, data.fetch(district_name)) if district_exists
   end
 
   def find_all_matching(name_fragment)
     matching = []
     district_names = @districts.keys
-
     district_names.each do |name|
       matching << @districts[name] if name.include? name_fragment.upcase
     end
     matching
-
   end
 
 end

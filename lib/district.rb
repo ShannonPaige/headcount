@@ -19,7 +19,7 @@ class District
   # StatewideTesting = @statewidetesting
   # EconomicProfile = @economicprofile
 
-  def self.name(district_name)
+  def name(district_name)
     district_name.upcase
   end
 

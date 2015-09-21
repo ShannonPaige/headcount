@@ -12,7 +12,6 @@ class StatewideTestingTest < Minitest::Test
   end
 
   def test_returns_a_hash_grouped_by_year
-    skip
     # not passing bc in 2012 it is reading in reading before math
     expected = { 2008 => {:math => 0.857, :reading => 0.866, :writing => 0.671},
     2009 => {:math => 0.824, :reading => 0.862, :writing => 0.706},
@@ -26,7 +25,6 @@ class StatewideTestingTest < Minitest::Test
   end
 
   def test_returns_a_hash_grouped_by_race
-    skip
     expected = { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},
     2012 => {math: 0.818, reading: 0.893, writing: 0.808},
     2013 => {math: 0.805, reading: 0.901, writing: 0.810},

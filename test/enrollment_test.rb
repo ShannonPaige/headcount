@@ -150,7 +150,7 @@ class EnrollmentTest < Minitest::Test
 
   def test_returns_special_education_participation_percents_by_year
     expected = {2009 => 0.075,
-      2010 => 0.0782,
+      2010 => 0.078,
       2011 => 0.079,
       2012 => 0.078,
       2013 => 0.079,

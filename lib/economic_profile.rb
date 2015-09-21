@@ -26,21 +26,20 @@ class EconomicProfile
 
   def school_aged_children_in_poverty_in_year(year)
     poverty_by_year = data[:school_aged_children_in_poverty_by_percentage][year]
-    poverty_by_year = '%.3f' % poverty_by_year
-    poverty_by_year.to_f
+    # poverty_by_year = '%.3f' % poverty_by_year
+    # poverty_by_year.to_f
   end
 
-  def title_i_students
-    title_i = data[:title_i_students]
-    truncated_hash = title_i.map do |hash|
-      return_percent = '%.3f' % hash[1]
-      [hash[0], return_percent.to_f]
+  def title_1_students
+    title_1 = data[:title_i_students]
+    truncated_hash = title_1.map do |hash|
+      [hash[0], hash[1]]
     end
     truncated_hash.to_h
   end
 
   def title_1_students_in_year(year)
-
+    data[:title_i_students][year]
   end
 
 end

@@ -15,7 +15,6 @@ class EconomicProfileTest < Minitest::Test
   end
 
   def test_free_or_reduced_lunch_in_year
-    skip
     #not truncating without rounding or sorting low to high
     expected = { 2000 => 0.020,
     2001 => 0.024,
@@ -43,15 +42,14 @@ class EconomicProfileTest < Minitest::Test
     assert_equal 0.064, @economic_profile_instance.school_aged_children_in_poverty_in_year(2012)
   end
 
-  def test_title_i_students
-    skip
+  def test_title_1_students
     #not truncating properly
     expected = {2009 => 0.014, 2011 => 0.011, 2012 => 0.01, 2013 => 0.012, 2014 => 0.027}
-    assert_equal expected, @economic_profile_instance.title_i_students
+    assert_equal expected, @economic_profile_instance.title_1_students
   end
 
   def test_title_1_students_in_year
-    skip
+    assert_equal 0.01, @economic_profile_instance.title_1_students_in_year(2012)
   end
 
 end
