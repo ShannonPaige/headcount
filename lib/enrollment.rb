@@ -87,7 +87,7 @@ end
 
   def participation_by_race_or_ethnicity(race)
     if race_lookup(race)
-      data[:pupil_enrollment_by_race_ethnicity_by_percentage][race_lookup(race)]
+      data[:pupil_enrollment_by_race_ethnicity][race_lookup(race)][:percent]
     else
       raise UnknownRaceError
     end

@@ -121,15 +121,8 @@ class EnrollmentTest < Minitest::Test
     assert_nil @enrollment_instance.participation_in_year(1913)
   end
 
-  #TODO Need this file added to hash
   def test_returns_participation_percents_by_year_for_given_race
-    skip
-    expected = {
-      2011 => 0.047,
-      2012 => 0.041,
-      2013 => 0.052,
-      2014 => 0.056
-    }
+    expected = {2007=>0.05, 2008=>0.054, 2009=>0.055, 2010=>0.04, 2011=>0.036, 2012=>0.038, 2013=>0.038, 2014=>0.037}
     assert_equal expected, @enrollment_instance.participation_by_race_or_ethnicity(:asian)
     assert_raises UnknownRaceError do
       @enrollment_instance.dropout_rate_for_race_or_ethnicity(:wookiee)

@@ -23,7 +23,7 @@ module Parse
     end
   end
 
-  def self.file_to_symbol(file)
+  def self.filename_to_symbol(file)
     file.gsub('.csv', "")
         .gsub('3', "three")
         .gsub('4', "four")
@@ -53,25 +53,47 @@ module Parse
     info
   end
 
-  def self.parse_year_data_files(data_dir, data_hash, file)
+  def self.build_hash(data_hash, district_name, hashes, info_type, file)
+    data_hash[district_name] ||= {}
+    mapped_data = map_year_to_data(hashes)
+    data_hash[district_name][filename_to_symbol(file)] = mapped_data.to_h
+  end
+
+  def self.year_data(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     group_by_district(data).each do |district_name, hashes|
-      data_hash[district_name] ||= {}
-      mapped_data = map_year_to_data(hashes)
-      data_hash[district_name][file_to_symbol(file)] = mapped_data.to_h
+      build_hash(data_hash, district_name, hashes, nil, file)
     end
   end
 
-  def self.parse_info_year_data_files(data_dir, data_hash, file)
+  def self.info_year_data(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     info = find_header_info_type(data)
     group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      data_hash[district_name][file_to_symbol(file)] ||= {}
+      data_hash[district_name][filename_to_symbol(file)] ||= {}
       group_by_info(info, hashes).each do |info_type, hashes|
-        data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
-        mapped_data = map_year_to_data(hashes)
-        data_hash[district_name][file_to_symbol(file)][info_type] = mapped_data.to_h
+        build_hash(data_hash, district_name, hashes, info_type, file)
+      end
+    end
+  end
+
+  def self.info_year_datatype_data(data_dir, data_hash, file)
+    data = read_in_file(data_dir, file)
+    info = find_header_info_type(data)
+    group_by_district(data).each do |district_name, hashes|
+      data_hash[district_name] ||= {}
+      data_hash[district_name][filename_to_symbol(file)] ||= {}
+      group_by_info(info, hashes).each do |info_type, hashes|
+        data_hash[district_name][filename_to_symbol(file)][info_type] ||= {}
+        percents = hashes.select { |hash| hash[:dataformat].include?("Percent")}
+        numbers = hashes.select { |hash| hash[:dataformat].include?("Number")}
+        percents.each do |hash|
+          build_hash(data_hash, district_name, percents, info_type, file)
+        end
+        numbers.each do |hash|
+          build_hash(data_hash, district_name, numbers, info_type, file)
+        end
       end
     end
   end
@@ -108,39 +130,6 @@ module Parse
       data_hash[district_name][filename] = mapped_data.to_h
     end
     data_hash
-  end
-
-  def self.parse_data_type_4(data_dir, data_hash, file)
-    data = read_in_file(data_dir, file)
-    #create hash with whole number values
-    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
-    numbers = data.select { |hash| hash[:dataformat].include?("Number")}
-    filename << "_by_number"
-    filename = filename.to_sym
-    numbers = numbers.group_by do |hash|
-        hash.fetch(:race)
-    end
-
-    numbers.each do |district_name, hashes|
-      data_hash[district_name] ||= {}
-      mapped_data = map_year_to_data(hashes)
-      data_hash[district_name][filename] = mapped_data.to_h
-    end
-
-    #create hash with percent values
-    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
-    percent = data.select { |hash| hash[:dataformat].include?("Percent")}
-    filename << "_by_percentage"
-    filename = filename.to_sym
-    percent = percent.group_by do |hash|
-        hash.fetch(:race)
-    end
-
-    percent.each do |district_name, hashes|
-      data_hash[district_name] ||= {}
-      mapped_data = map_year_to_data(hashes)
-      data_hash[district_name][filename] = mapped_data.to_h
-    end
   end
 
   def self.parse_data_type_5(data_dir, data_hash, file)
@@ -223,13 +212,13 @@ module Parse
     end
     group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      data_hash[district_name][file_to_symbol(file)] ||= {}
+      data_hash[district_name][filename_to_symbol(file)] ||= {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info).to_i
       end
       grouped_by_info.each do |info_type, hashes|
-        data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
+        data_hash[district_name][filename_to_symbol(file)][info_type] ||= {}
         mapped_data = hashes.map do |hash|
           if hash[:dataformat] == "Number"
             [hash[:race_ethnicity].to_s, hash[:data].to_i]
@@ -237,7 +226,7 @@ module Parse
             [hash[:race_ethnicity].to_s, truncate_float(hash[:data].to_f)]
           end
         end
-        data_hash[district_name][file_to_symbol(file)][info_type] = mapped_data.to_h
+        data_hash[district_name][filename_to_symbol(file)][info_type] = mapped_data.to_h
       end
     end
   end
