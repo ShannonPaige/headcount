@@ -1,3 +1,5 @@
+require "headcount"
+
 class Enrollment
   attr_accessor :district_name, :data, :race_table
 
@@ -40,8 +42,11 @@ class Enrollment
   end
 
   def dropout_rate_for_race_or_ethnicity(race)
-    data[:dropout_rates_by_race_and_ethnicity][race_lookup(race)]
-    #needs UnknownRaceError
+    if race_lookup(race)
+      data[:dropout_rates_by_race_and_ethnicity][race_lookup(race)]
+    else
+      raise UnknownRaceError
+    end
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
@@ -81,13 +86,11 @@ end
   end
 
   def participation_by_race_or_ethnicity(race)
-    data[:pupil_enrollment_by_race_ethnicity_by_percentage][race_lookup(race)]
-  # This method takes one parameter:
-
-  #race as a symbol from the following set: [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white]
-  #A call to this method with any unknown race should raise an UnknownRaceError.
-
-  #The method returns a hash with years as keys and a three-digit floating point number representing a percentage.
+    if race_lookup(race)
+      data[:pupil_enrollment_by_race_ethnicity_by_percentage][race_lookup(race)]
+    else
+      raise UnknownRaceError
+    end
   end
 
   def participation_by_race_or_ethnicity_in_year(year)

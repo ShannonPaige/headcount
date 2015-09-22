@@ -21,16 +21,24 @@ class StatewideTestingTest < Minitest::Test
     2013 => {:math => 0.855, :reading => 0.859, :writing => 0.668},
     2014 => {:math => 0.834, :reading => 0.831, :writing => 0.639}}
     assert_equal expected, @statewide_testing_instance.proficient_by_grade(3)
+    assert_raises UnknownDataError do
+      @statewide_testing_instance.proficient_by_grade(72)
+    end
 
   end
 
   def test_returns_a_hash_grouped_by_race
+    skip
     expected = { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},
     2012 => {math: 0.818, reading: 0.893, writing: 0.808},
     2013 => {math: 0.805, reading: 0.901, writing: 0.810},
     2014 => {math: 0.800, reading: 0.855, writing: 0.789},}
     #require "pry"; binding.pry
     assert_equal expected, @statewide_testing_instance.proficient_by_race_or_ethnicity(:asian)
+    assert_raises UnknownRaceError do
+      @statewide_testing_instance.proficient_by_race_or_ethnicity(:aliens)
+    end
+
   end
 
   def test_returns_a_truncated_three_digit_floating_point_number_representing_a_percentage

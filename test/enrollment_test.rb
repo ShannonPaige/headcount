@@ -46,7 +46,9 @@ class EnrollmentTest < Minitest::Test
       2012 => 0.007
     }
     assert_equal expected, @enrollment_instance.dropout_rate_for_race_or_ethnicity(:asian)
-    #assert_equal UnknownRaceError, @enrollment_instance.dropout_rate_for_race_or_ethnicity(:wookiee)
+    assert_raises UnknownRaceError do
+      @enrollment_instance.dropout_rate_for_race_or_ethnicity(:wookiee)
+    end
   end
 
   def test_returns_dropout_rate_percent_for_given_race_and_year
@@ -54,7 +56,6 @@ class EnrollmentTest < Minitest::Test
     assert_nil @enrollment_instance.dropout_rate_for_race_or_ethnicity_in_year(:asian, 1912)
   end
 
- # TODO Fix test so it truncates to three digits
   def test_returns_graduation_rate_percents_by_year
     expected = {2010 => 0.895,
       2011 => 0.895,
@@ -130,7 +131,9 @@ class EnrollmentTest < Minitest::Test
       2014 => 0.056
     }
     assert_equal expected, @enrollment_instance.participation_by_race_or_ethnicity(:asian)
-    #assert_equal UnknownRaceError, @enrollment_instance.participation_by_race_or_ethnicity(:wookiee)
+    assert_raises UnknownRaceError do
+      @enrollment_instance.dropout_rate_for_race_or_ethnicity(:wookiee)
+    end
   end
 
   def test_returns_participation_percents_by_race_in_given_year

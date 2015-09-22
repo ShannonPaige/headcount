@@ -16,6 +16,7 @@ module Parse
   def self.parse_data_type_1(data_dir, data_hash, file)
     filename = file.gsub('.csv', "").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end

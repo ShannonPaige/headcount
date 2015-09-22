@@ -15,7 +15,7 @@ class StatewideTesting
     when(8)
       data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap]
     else
-      #UnknownDataError
+      raise UnknownDataError
     end
   end
 
@@ -38,7 +38,7 @@ class StatewideTesting
     when(:black)
       data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap]
     else
-      #UnknownDataError
+      raise UnknownRaceError
     end
   end
 
@@ -52,7 +52,7 @@ class StatewideTesting
       new_hash = data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap]
       new_hash[year][subject].round(3)
     else
-      #UnknownDataError
+      raise UnknownDataError
     end
   end
 
