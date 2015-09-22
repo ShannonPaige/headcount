@@ -53,9 +53,10 @@ class StatewideTestingTest < Minitest::Test
   end
 
   def test_proficient_for_subject_in_year
-    skip
-    #info is incomplete - is it a combination of both 3rd and 8th grade?
-    assert_equal 0.680, @statewide_testing_instance.proficient_for_subject_in_year(:math, 2012)
+    assert_equal 0.689, @statewide_testing_instance.proficient_for_subject_in_year(:math, 2012)
+    assert_raises UnknownDataError do
+      @statewide_testing_instance.proficient_for_subject_in_year(:organic_chemistry, 2008)
+    end
   end
 
   def test_returns_a_truncated_three_digit_floating_point_number_representing_a_percentage
