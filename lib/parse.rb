@@ -1,5 +1,9 @@
 
 module Parse
+  def self.read_in_file(data_dir, file)
+    CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol)
+        .map { |row| row.to_h }
+  end
 
   def self.truncate_float(float)
     ((float.to_f * 1000).to_i)/1000.to_f
@@ -14,7 +18,13 @@ module Parse
   end
 
   def self.file_to_symbol(file)
-    file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
+    file.gsub('.csv', "")
+        .gsub('3', "three")
+        .gsub('4', "four")
+        .gsub('8', "eight")
+        .gsub(" ", '_')
+        .gsub("-", '_')
+        .downcase.to_sym
   end
 
   def self.group_by_district(data)
@@ -25,7 +35,7 @@ module Parse
   end
 
   def self.parse_year_data_files(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
@@ -36,7 +46,8 @@ module Parse
   end
 
   def self.parse_data_type_2(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    #data = CSV.read(File.join(data_dir file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     info = ""
     data.each do |hash|
       info = hash.keys[1]
@@ -59,8 +70,7 @@ module Parse
   end
 
   def self.parse_data_type_3(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
-
+    data = read_in_file(data_dir, file)
     #create hash with whole number values
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
     numbers = data.select { |hash| hash[:dataformat].include?("Number")}
@@ -98,7 +108,7 @@ module Parse
   end
 
   def self.parse_data_type_4(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     #create hash with whole number values
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
     numbers = data.select { |hash| hash[:dataformat].include?("Number")}
@@ -135,7 +145,7 @@ module Parse
   end
 
   def self.parse_data_type_5(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     #create hash with whole number values
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
     group_by_numbers = data.select { |hash| hash[:dataformat].include?("Number")}
@@ -179,7 +189,7 @@ module Parse
 
   def self.parse_data_type_6(data_dir, data_hash, file)
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     info = ""
     data.each do |hash|
       info = hash.keys[2]
@@ -211,23 +221,18 @@ module Parse
   end
 
   def self.parse_data_type_7(data_dir, data_hash, file)
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    data = read_in_file(data_dir, file)
     info = ""
     data.each do |hash|
       info = hash.keys[2]
     end
-    info
-    grouped_by_district = data.group_by do |hash|
-      hash.fetch(:location)
-    end
-    grouped_by_district.each do |district_name, hashes|
+    group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
       data_hash[district_name][file_to_symbol(file)] ||= {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info).to_i
       end
-      grouped_by_info
       grouped_by_info.each do |info_type, hashes|
         data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
         mapped_data = hashes.map do |hash|
