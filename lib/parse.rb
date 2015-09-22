@@ -224,16 +224,16 @@ module Parse
       data_hash[district_name][filename] ||= {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
-        hash.fetch(info).to_sym
+        hash.fetch(info).to_i
       end
       grouped_by_info
       grouped_by_info.each do |info_type, hashes|
         data_hash[district_name][filename][info_type] ||= {}
         mapped_data = hashes.map do |hash|
           if hash[:dataformat] == "Number"
-            [hash[:race_ethnicity].downcase.to_s, hash[:data].to_i]
+            [hash[:race_ethnicity].to_s, hash[:data].to_i]
           else
-            [hash[:race_ethnicity].downcase.to_s, truncate_float(hash[:data].to_f)]
+            [hash[:race_ethnicity].to_s, truncate_float(hash[:data].to_f)]
           end
         end
         data_hash[district_name][filename][info_type] = mapped_data.to_h

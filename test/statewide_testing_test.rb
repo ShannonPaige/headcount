@@ -27,18 +27,35 @@ class StatewideTestingTest < Minitest::Test
 
   end
 
-  def test_returns_a_hash_grouped_by_race
-    skip
+  def test_proficient_by_race_or_ethnicity
     expected = { 2011 => {math: 0.816, reading: 0.897, writing: 0.826},
     2012 => {math: 0.818, reading: 0.893, writing: 0.808},
     2013 => {math: 0.805, reading: 0.901, writing: 0.810},
     2014 => {math: 0.800, reading: 0.855, writing: 0.789},}
-    #require "pry"; binding.pry
     assert_equal expected, @statewide_testing_instance.proficient_by_race_or_ethnicity(:asian)
     assert_raises UnknownRaceError do
       @statewide_testing_instance.proficient_by_race_or_ethnicity(:aliens)
     end
+  end
 
+  def test_proficient_for_subject_by_grade_in_year
+    assert_equal 0.857, @statewide_testing_instance.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
+    assert_raises UnknownDataError do
+      @statewide_testing_instance.proficient_for_subject_by_race_in_year(:organic_chemistry, 3, 2008)
+    end
+  end
+
+  def test_proficient_for_subject_by_race_in_year
+    assert_equal 0.818, @statewide_testing_instance.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
+    assert_raises UnknownDataError do
+      @statewide_testing_instance.proficient_for_subject_by_race_in_year(:organic_chemistry, :asian, 2012)
+    end
+  end
+
+  def test_proficient_for_subject_in_year
+    skip
+    #info is incomplete - is it a combination of both 3rd and 8th grade?
+    assert_equal 0.680, @statewide_testing_instance.proficient_for_subject_in_year(:math, 2012)
   end
 
   def test_returns_a_truncated_three_digit_floating_point_number_representing_a_percentage
