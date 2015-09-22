@@ -17,6 +17,12 @@ module Parse
     end
   end
 
+  def self.map_year_to_data(hashes)
+    mapped_data = hashes.map do |hash|
+      number_or_percent(hash)
+    end
+  end
+
   def self.file_to_symbol(file)
     file.gsub('.csv', "")
         .gsub('3', "three")
@@ -31,39 +37,40 @@ module Parse
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end
-    grouped
+  end
+
+  def self.group_by_info(info, hashes)
+    grouped_by_info = hashes.group_by do |hash|
+      hash.fetch(info)
+    end
+  end
+
+  def self.find_header_info_type(data)
+    info = ""
+    data.each do |hash|
+      info = hash.keys[1]
+    end
+    info
   end
 
   def self.parse_year_data_files(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        number_or_percent(hash)
-      end
+      mapped_data = map_year_to_data(hashes)
       data_hash[district_name][file_to_symbol(file)] = mapped_data.to_h
     end
   end
 
-  def self.parse_data_type_2(data_dir, data_hash, file)
-    #data = CSV.read(File.join(data_dir file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+  def self.parse_info_year_data_files(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
-    info = ""
-    data.each do |hash|
-      info = hash.keys[1]
-    end
+    info = find_header_info_type(data)
     group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
       data_hash[district_name][file_to_symbol(file)] ||= {}
-      info_map = []
-      grouped_by_info = hashes.group_by do |hash|
-        hash.fetch(info)
-      end
-      grouped_by_info.each do |info_type, hashes|
+      group_by_info(info, hashes).each do |info_type, hashes|
         data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
-        mapped_data = hashes.map do |hash|
-          number_or_percent(hash)
-        end
+        mapped_data = map_year_to_data(hashes)
         data_hash[district_name][file_to_symbol(file)][info_type] = mapped_data.to_h
       end
     end
@@ -82,9 +89,7 @@ module Parse
 
     numbers.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_i]
-      end
+      mapped_data = map_year_to_data(hashes)
       data_hash[district_name][filename] = mapped_data.to_h
     end
 
@@ -99,9 +104,7 @@ module Parse
 
     percent.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, truncate_float(hash[:data].to_f)]
-      end
+      mapped_data = map_year_to_data(hashes)
       data_hash[district_name][filename] = mapped_data.to_h
     end
     data_hash
@@ -120,9 +123,7 @@ module Parse
 
     numbers.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_i]
-      end
+      mapped_data = map_year_to_data(hashes)
       data_hash[district_name][filename] = mapped_data.to_h
     end
 
@@ -137,9 +138,7 @@ module Parse
 
     percent.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_f]
-      end
+      mapped_data = map_year_to_data(hashes)
       data_hash[district_name][filename] = mapped_data.to_h
     end
   end
@@ -156,9 +155,7 @@ module Parse
     end
     group_by_numbers.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, hash[:data].to_i]
-      end
+      mapped_data = map_year_to_data(hashes)
       mapped_data = mapped_data.to_h
       info_map = hashes.map do |hash|
         [hash[:poverty_level], mapped_data]
@@ -176,9 +173,7 @@ module Parse
     end
     group_by_percent.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      mapped_data = hashes.map do |hash|
-        [hash[:timeframe].to_i, truncate_float(hash[:data].to_f)]
-      end
+      mapped_data = map_year_to_data(hashes)
       mapped_data = mapped_data.to_h
       info_map = hashes.map do |hash|
         [hash[:poverty_level], mapped_data]

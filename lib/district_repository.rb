@@ -29,12 +29,12 @@ class DistrictRepository
     Parse.parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv')
     Parse.parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv')
     Parse.parse_data_type_7(data_dir, data_hash, 'Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv')
-    Parse.parse_data_type_2(data_dir, data_hash, 'Dropout rates by race and ethnicity.csv')
+    Parse.parse_info_year_data_files(data_dir, data_hash, 'Dropout rates by race and ethnicity.csv')
     Parse.parse_data_type_3(data_dir, data_hash, 'Special education.csv')
     Parse.parse_data_type_3(data_dir, data_hash, 'School-aged children in poverty.csv')
     Parse.parse_data_type_4(data_dir, data_hash, 'Pupil enrollment by race_ethnicity.csv')
     Parse.parse_data_type_5(data_dir, data_hash, 'Students qualifying for free or reduced price lunch.csv')
-
+require "pry"; binding.pry
     DistrictRepository.new(data_hash)
   end
 
