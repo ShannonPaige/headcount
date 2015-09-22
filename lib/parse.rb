@@ -6,52 +6,54 @@ module Parse
   end
 
   def self.number_or_percent(hash)
-    if hash[:dataformat] == "Number"
-      [hash[:timeframe].to_i, hash[:data].to_i]
-    else
+    if hash[:dataformat] == "Percent"
       [hash[:timeframe].to_i, truncate_float(hash[:data].to_f)]
+    else
+      [hash[:timeframe].to_i, hash[:data].to_i]
     end
   end
 
-  def self.parse_data_type_1(data_dir, data_hash, file)
-    filename = file.gsub('.csv', "").gsub(" ", '_').gsub("-", '_').downcase.to_sym
-    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+  def self.file_to_symbol(file)
+    file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
+  end
 
+  def self.group_by_district(data)
     grouped = data.group_by do |hash|
       hash.fetch(:location)
     end
-    grouped.each do |district_name, hashes|
+    grouped
+  end
+
+  def self.parse_year_data_files(data_dir, data_hash, file)
+    data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
+    group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
       mapped_data = hashes.map do |hash|
         number_or_percent(hash)
       end
-      data_hash[district_name][filename] = mapped_data.to_h
+      data_hash[district_name][file_to_symbol(file)] = mapped_data.to_h
     end
   end
 
   def self.parse_data_type_2(data_dir, data_hash, file)
-    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
     info = ""
     data.each do |hash|
       info = hash.keys[1]
     end
-    grouped_by_district = data.group_by do |hash|
-      hash.fetch(:location)
-    end
-    grouped_by_district.each do |district_name, hashes|
+    group_by_district(data).each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      data_hash[district_name][filename] ||= {}
+      data_hash[district_name][file_to_symbol(file)] ||= {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info)
       end
       grouped_by_info.each do |info_type, hashes|
-        data_hash[district_name][filename][info_type] ||= {}
+        data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
         mapped_data = hashes.map do |hash|
           number_or_percent(hash)
         end
-        data_hash[district_name][filename][info_type] = mapped_data.to_h
+        data_hash[district_name][file_to_symbol(file)][info_type] = mapped_data.to_h
       end
     end
   end
@@ -209,7 +211,6 @@ module Parse
   end
 
   def self.parse_data_type_7(data_dir, data_hash, file)
-    filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol).map { |row| row.to_h }
     info = ""
     data.each do |hash|
@@ -221,14 +222,14 @@ module Parse
     end
     grouped_by_district.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      data_hash[district_name][filename] ||= {}
+      data_hash[district_name][file_to_symbol(file)] ||= {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info).to_i
       end
       grouped_by_info
       grouped_by_info.each do |info_type, hashes|
-        data_hash[district_name][filename][info_type] ||= {}
+        data_hash[district_name][file_to_symbol(file)][info_type] ||= {}
         mapped_data = hashes.map do |hash|
           if hash[:dataformat] == "Number"
             [hash[:race_ethnicity].to_s, hash[:data].to_i]
@@ -236,7 +237,7 @@ module Parse
             [hash[:race_ethnicity].to_s, truncate_float(hash[:data].to_f)]
           end
         end
-        data_hash[district_name][filename][info_type] = mapped_data.to_h
+        data_hash[district_name][file_to_symbol(file)][info_type] = mapped_data.to_h
       end
     end
   end
