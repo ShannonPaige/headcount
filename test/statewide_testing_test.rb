@@ -11,7 +11,7 @@ class StatewideTestingTest < Minitest::Test
     File.expand_path '../data', __dir__
   end
 
-  def test_returns_a_hash_grouped_by_year
+  def test_proficient_by_grade
     # not passing bc in 2012 it is reading in reading before math
     expected = { 2008 => {:math => 0.857, :reading => 0.866, :writing => 0.671},
     2009 => {:math => 0.824, :reading => 0.862, :writing => 0.706},
