@@ -29,7 +29,7 @@ class StatewideTesting
 
   def proficient_by_race_or_ethnicity(race)
     if !race_lookup(race)
-      raise UnknownRaceError
+      raise UnknownDataError
     end
     expected ||= {}
     proficiency_data = [
@@ -57,6 +57,12 @@ class StatewideTesting
   end                                                                          # => :proficient_by_race_or_ethnicity
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
+    if !race_lookup(race)
+      raise UnknownDataError
+    end
+    if !year.between?(2011,2014)
+      raise UnknownDataError
+    end
     case subject
     when (:math)
       data[:average_proficiency_on_the_csap_tcap_by_race_ethnicity__math][year][race_lookup(race)]
@@ -70,20 +76,42 @@ class StatewideTesting
   end  # => :proficient_for_subject_by_race_in_year
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    #data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][2008][:math]
-    case subject
-    when (:math)
-      data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:math]
-    when (:reading)
-      data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:reading]
-    when (:writing)
-      data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:writing]
+    if !year.between?(2008,2014)
+      raise UnknownDataError
+    end
+    if grade == 3
+      case subject
+      when (:math)
+        data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:math]
+      when (:reading)
+        data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:reading]
+      when (:writing)
+        data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:writing]
+      else
+        raise UnknownDataError
+      end
+    elsif grade == 8
+      case subject
+      when (:math)
+        data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:math]
+      when (:reading)
+        data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:reading]
+      when (:writing)
+        data[:eightth_grade_students_scoring_proficient_or_above_on_the_csap_tcap][year][:writing]
+      else
+        raise UnknownDataError
+      end
     else
       raise UnknownDataError
     end
+
   end    # => :proficient_for_subject_by_grade_in_year
 
   def proficient_for_subject_in_year(subject, year)
+    if !year.between?(2011,2014)
+      raise UnknownDataError
+    end
+
     case subject
     when (:math)
       data[:average_proficiency_on_the_csap_tcap_by_race_ethnicity__math][year]["All Students"]

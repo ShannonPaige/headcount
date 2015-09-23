@@ -19,18 +19,24 @@ class EconomicProfile
   end
 
   def free_or_reduced_lunch_in_year(year)
-    year_eligible = data[:students_qualifying_for_free_or_reduced_price_lunch_by_percentage]["Eligible for Free or Reduced Lunch"][2012]
-    year_eligible = '%.3f' % year_eligible
-    year_eligible.to_f
+    if !year.between?(2000,2014)
+      return nil
+    else
+      year_eligible = data[:students_qualifying_for_free_or_reduced_price_lunch_by_percentage]["Eligible for Free or Reduced Lunch"][2012]
+      year_eligible = '%.3f' % year_eligible
+      year_eligible.to_f
+    end
+  end
+
+  def school_aged_children_in_poverty_by_year
+    data[:school_aged_children_in_poverty_by_percentage]
   end
 
   def school_aged_children_in_poverty_in_year(year)
     poverty_by_year = data[:school_aged_children_in_poverty_by_percentage][year]
-    # poverty_by_year = '%.3f' % poverty_by_year
-    # poverty_by_year.to_f
   end
 
-  def title_1_students
+  def title_1_students_by_year
     title_1 = data[:title_i_students]
     truncated_hash = title_1.map do |hash|
       [hash[0], hash[1]]
