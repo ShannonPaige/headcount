@@ -58,8 +58,12 @@ class Enrollment
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
-    data[:dropout_rates_by_race_and_ethnicity][race_lookup_dropout(race)][year]
-end
+    if race_lookup_dropout(race)
+      data[:dropout_rates_by_race_and_ethnicity][race_lookup_dropout(race)][year]
+    else
+      raise UnknownRaceError
+    end
+  end
 
   def graduation_rate_by_year
     data[:high_school_graduation_rates]
@@ -106,7 +110,6 @@ end
     @race_table_enrollment.each do |race_sym, race_s|
       race_participation[race_sym] = data[:pupil_enrollment_by_race_ethnicity][race_s][:percent][year]
     end
-    #require "pry"; binding.pry
     return nil if data[:dropout_rates_by_race_and_ethnicity]["Asian Students"][year] == nil
     race_participation
   end

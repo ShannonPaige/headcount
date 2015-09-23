@@ -35,7 +35,7 @@ module Parse
 
   def self.group_by_district(data)
     grouped = data.group_by do |hash|
-      hash.fetch(:location)
+      hash.fetch(:location).upcase
     end
   end
 
