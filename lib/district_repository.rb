@@ -10,8 +10,8 @@ class DistrictRepository
   def initialize(data)
     @data ||= data
     @districts = {}
-    data.each do |district_name, hash|
-      @districts[district_name] = District.new(district_name, data[district_name])
+    data.each do |name, hash|
+      @districts[name] = District.new(name, data[name])
     end
   end
 
@@ -38,9 +38,10 @@ class DistrictRepository
     DistrictRepository.new(data_hash)
   end
 
-  def find_by_name(district_name)
-    district_name = district_name.upcase
-    @districts[district_name]
+  def find_by_name(name)
+    name = name.upcase
+    @districts[name]
+    # require "pry"; binding.pry
   end
 
   def find_all_matching(name_fragment)

@@ -12,7 +12,7 @@ class DistrictRepositoryTest < Minitest::Test
   meta(current: true)
 
   def test_it_can_load_a_district_from_csv_data
-    assert_equal "ACADEMY 20", @district.district_name
+    assert_equal "ACADEMY 20", @district.name
     assert_equal 22620, @district.enrollment.in_year(2009)
     # assert_equal 0.895, district.enrollment.graduation_rate.for_high_school_in_year(2010)
     # assert_equal 0.857, district.statewide_testing.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
@@ -24,7 +24,7 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_returns_district_with_given_name___case_insensitive
     assert_equal @district, @dr.find_by_name("academy 20")
-    assert_equal "ACADEMY 20", @dr.find_by_name("academy 20").district_name
+    assert_equal "ACADEMY 20", @dr.find_by_name("academy 20").name
   end
 
   def test_returns_empty_array_if_no_districts_match_supplied_name_fragment
