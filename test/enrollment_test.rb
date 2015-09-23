@@ -130,16 +130,8 @@ class EnrollmentTest < Minitest::Test
   end
 
   def test_returns_participation_percents_by_race_in_given_year
-    skip
-    expected = {
-      :asian => 0.036,
-      :black => 0.029,
-      :pacific_islander => 0.118,
-      :hispanic => 0.003,
-      :native_american => 0.004,
-      :two_or_more => 0.050,
-      :white => 0.756
-    }
+    expected = 
+      {:asian=>0.038, :black=>0.031, :pacific_islander=>0.004, :hispanic=>0.121, :native_american=>0.004, :two_or_more=>0.053, :white=>0.75}
     assert_equal expected, @enrollment_instance.participation_by_race_or_ethnicity_in_year(2012)
     assert_nil @enrollment_instance.participation_by_race_or_ethnicity_in_year(1912)
   end
