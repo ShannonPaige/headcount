@@ -53,16 +53,12 @@ module Parse
     info
   end
 
-  def self.build_hash(data_hash, district_name, hashes, info_type, file)
-    data_hash[district_name] ||= {}
-    mapped_data = map_year_to_data(hashes)
-    data_hash[district_name][filename_to_symbol(file)] = mapped_data.to_h
-  end
-
   def self.year_data(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     group_by_district(data).each do |district_name, hashes|
-      build_hash(data_hash, district_name, hashes, nil, file)
+      data_hash[district_name] ||= {}
+      mapped_data = map_year_to_data(hashes)
+      data_hash[district_name][filename_to_symbol(file)] = mapped_data.to_h
     end
   end
 
@@ -73,7 +69,9 @@ module Parse
       data_hash[district_name] ||= {}
       data_hash[district_name][filename_to_symbol(file)] ||= {}
       group_by_info(info, hashes).each do |info_type, hashes|
-        build_hash(data_hash, district_name, hashes, info_type, file)
+        data_hash[district_name] ||= {}
+        mapped_data = map_year_to_data(hashes)
+        data_hash[district_name][filename_to_symbol(file)][info_type] = mapped_data.to_h
       end
     end
   end
@@ -89,10 +87,14 @@ module Parse
         percents = hashes.select { |hash| hash[:dataformat].include?("Percent")}
         numbers = hashes.select { |hash| hash[:dataformat].include?("Number")}
         percents.each do |hash|
-          build_hash(data_hash, district_name, percents, info_type, file)
+          data_hash[district_name] ||= {}
+          mapped_data = map_year_to_data(percents)
+          data_hash[district_name][filename_to_symbol(file)][info_type][:percent] = mapped_data.to_h
         end
         numbers.each do |hash|
-          build_hash(data_hash, district_name, numbers, info_type, file)
+          data_hash[district_name] ||= {}
+          mapped_data = map_year_to_data(numbers)
+          data_hash[district_name][filename_to_symbol(file)][info_type][:numbers] = mapped_data.to_h
         end
       end
     end

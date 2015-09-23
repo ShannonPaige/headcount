@@ -34,6 +34,7 @@ class DistrictRepository
     Parse.parse_data_type_3(data_dir, data_hash, 'School-aged children in poverty.csv')
     Parse.info_year_datatype_data(data_dir, data_hash, 'Pupil enrollment by race_ethnicity.csv')
     Parse.parse_data_type_5(data_dir, data_hash, 'Students qualifying for free or reduced price lunch.csv')
+
     DistrictRepository.new(data_hash)
   end
 
