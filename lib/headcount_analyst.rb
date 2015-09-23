@@ -51,6 +51,15 @@ class HeadcountAnalyst
     Parse.truncate_float(average)
   end
 
+  def graduation_rate_variation(district_name, against)
+    district_grad_rates = @dr.find_by_name(district_name).enrollment.graduation_rate_by_year.values
+    district_average = average(district_grad_rates)
+    state_grad_rate = @dr.find_by_name('COLORADO').enrollment.graduation_rate_by_year.values
+    state_grad_average = average(state_grad_rate)
+    average = district_average/state_grad_average
+    Parse.truncate_float(average)
+  end
+
   def kindergarten_participation_against_household_income(district_name)
     income_variation = median_income_variation(district_name)
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => 'state')
@@ -96,6 +105,20 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
+
+    kinder_vs_state = kindergarten_participation_rate_variation(district_name, :against => 'state')
+
+    graduation_vs_state = graduation_rate_variation(district_name, :against => 'state')
+
+    kindergarten_graduation_variance = kinder_vs_state/graduation_vs_state
+
+    Parse.truncate_float(kindergarten_graduation_variance)
+
+    if kindergarten_graduation_variance < 1.5 && kindergarten_graduation_variance > 0.6
+      return true
+    else
+      return false
+    end
     # Call kindergarten variation the result of dividing the district's
     #kindergarten participation by the statewide average. Call graduation
     #variation the result of dividing the district's graduation rate by the

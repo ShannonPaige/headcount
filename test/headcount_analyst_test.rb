@@ -57,11 +57,12 @@ class HeadcountAnalystTest < Minitest::Test
     refute @ha.kindergarten_participation_correlates_with_household_income(:for => 'state')
     refute @ha.kindergarten_participation_correlates_with_household_income(:across => ['ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300', 'PLATTE VALLEY RE-3'])
   end
-  #
-  # def test_returns_how_kindergarten_participation_variation_compares_to_high_school_graduation_variation
-  #   expected = 1.2
-  #   assert_equal expected, @ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-  # end
+
+  def test_returns_how_kindergarten_participation_variation_compares_to_high_school_graduation_variation
+    #refute @ha.kindergarten_participation_correlates_with_household_income(:for => 'ACADEMY 20')
+    expected = 0.641
+    assert_equal expected, @ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+  end
   #
   # def test_returns_correlation_between_kindergarten_participation_and_high_school_graduation
   #   assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'district name')
