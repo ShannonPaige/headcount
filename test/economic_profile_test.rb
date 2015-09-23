@@ -42,7 +42,7 @@ class EconomicProfileTest < Minitest::Test
     assert_equal 0.064, @economic_profile_instance.school_aged_children_in_poverty_in_year(2012)
   end
 
-  def test_title_1_students
+  def test_title_1_students_by_year
     #not truncating properly
     expected = {2009 => 0.014, 2011 => 0.011, 2012 => 0.01, 2013 => 0.012, 2014 => 0.027}
     assert_equal expected, @economic_profile_instance.title_1_students
