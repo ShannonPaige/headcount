@@ -8,6 +8,10 @@ class EconomicProfile
     @data ||= data
   end
 
+  def median_income
+   data[:median_household_income]
+  end
+
   def free_or_reduced_lunch_by_year
     #not truncating or sorting low to high
     new_hash = data[:students_qualifying_for_free_or_reduced_price_lunch_by_percentage]["Eligible for Free or Reduced Lunch"]

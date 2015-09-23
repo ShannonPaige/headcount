@@ -53,8 +53,8 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_returns_how_kindergarten_participation_correlates_with_median_household_income
-    assert @ha.kindergarten_participation_correlates_with_household_income(:for => 'ACADEMY 20')
-    assert @ha.kindergarten_participation_correlates_with_household_income(:for => 'state')
+    refute @ha.kindergarten_participation_correlates_with_household_income(:for => 'ACADEMY 20')
+    refute @ha.kindergarten_participation_correlates_with_household_income(:for => 'state')
     #refute @ha.kindergarten_participation_correlates_with_household_income(:across => ['district_1', 'district_2', 'district_3', 'district_4'])
   end
   #

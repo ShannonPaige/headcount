@@ -14,7 +14,8 @@ class StatewideTesting
 
   def race_lookup(race)
       race_table[race]
-  end                    # => :race_lookup
+  end
+                # => :race_lookup
 
   def proficient_by_grade(grade)
     case grade
