@@ -63,6 +63,15 @@ class HeadcountAnalyst
     Parse.truncate_float(average)
   end
 
+  def graduation_rate_variation(district_name, against)
+    district_grad_rates = @dr.find_by_name(district_name).enrollment.graduation_rate_by_year.values
+    district_average = average(district_grad_rates)
+    state_grad_rate = @dr.find_by_name('COLORADO').enrollment.graduation_rate_by_year.values
+    state_grad_average = average(state_grad_rate)
+    average = district_average/state_grad_average
+    Parse.truncate_float(average)
+  end
+
   def kindergarten_participation_against_household_income(district_name)
     income_variation = median_income_variation(district_name)
     kindergarten_variation = kindergarten_participation_rate_variation(district_name, :against => 'state')
@@ -144,6 +153,34 @@ class HeadcountAnalyst
     correlation_list = []
     considered_districts.each do |district_name|
       kp = kindergarten_participation_against_high_school_graduation(district_name)
+      if kp < 1.5 && kp > 0.6
+        correlation_list << district_name
+      end
+    end
+    return true if correlation_list.length > tolerance
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(consider)
+    for_or_across = consider.keys
+    district_name = consider[for_or_across[0]]
+    if district_name == 'state'
+      considered_districts = @dr.districts.keys
+      return true if check_kinder_coorelation(considered_districts)
+    elsif district_name.class == Array
+      considered_districts = consider[for_or_across[0]]
+      return true if check_kinder_coorelation(considered_districts)
+    else
+      considered_districts = [district_name]
+      return true if check_kinder_coorelation(considered_districts)
+    end
+    false
+  end
+
+  def check_kinder_coorelation(considered_districts)
+    tolerance = considered_districts.length * 0.70
+    correlation_list = []
+    considered_districts.each do |district_name|
+      kp = kindergarten_participation_against_household_income(district_name)
       if kp < 1.5 && kp > 0.6
         correlation_list << district_name
       end

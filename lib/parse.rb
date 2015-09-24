@@ -99,7 +99,7 @@ module Parse
     end
   end
 
-  def self.parse_data_type_3(data_dir, data_hash, file)
+  def self.info_year_dataformat_data(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     #create hash with whole number values
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
@@ -133,7 +133,7 @@ module Parse
     data_hash
   end
 
-  def self.parse_data_type_5(data_dir, data_hash, file)
+  def self.info_poverty_year_dataformat(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     #create hash with whole number values
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase
@@ -172,20 +172,20 @@ module Parse
     end
   end
 
-  def self.parse_data_type_6(data_dir, data_hash, file)
+  def self.info_subject_year_data(data_dir, data_hash, file)
     filename = file.gsub('.csv', "").gsub('3', "three").gsub('8', "eight").gsub(" ", '_').gsub("-", '_').downcase.to_sym
     data = read_in_file(data_dir, file)
     info = ""
+    flag = false
     data.each do |hash|
       info = hash.keys[2]
     end
-    info
     grouped_by_district = data.group_by do |hash|
       hash.fetch(:location).upcase
     end
     grouped_by_district.each do |district_name, hashes|
       data_hash[district_name] ||= {}
-      data_hash[district_name][filename] ||= {}
+      data_hash[district_name][filename] = {}
       info_map = []
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info).to_i
@@ -196,15 +196,24 @@ module Parse
           if hash[:dataformat] == "Number"
             [hash[:score].downcase.to_sym, hash[:data].to_i]
           else
+            if hash[:data] == "N/A" || hash[:data] == "#VALUE!" || hash[:data] == "LNE"
+              flag = true
+            end
             [hash[:score].downcase.to_sym, truncate_float(hash[:data].to_f)]
           end
         end
-        data_hash[district_name][filename][info_type] = mapped_data.to_h
+        if flag
+          data_hash[district_name] = {}
+          data_hash[district_name][filename] = {}
+          data_hash[district_name][filename][info_type] = {}
+        else
+          data_hash[district_name][filename][info_type] = mapped_data.to_h
+        end
       end
     end
   end
 
-  def self.parse_data_type_7(data_dir, data_hash, file)
+  def self.info_race_year_data(data_dir, data_hash, file)
     data = read_in_file(data_dir, file)
     info = ""
     data.each do |hash|
