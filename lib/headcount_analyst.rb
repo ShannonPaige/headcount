@@ -107,31 +107,48 @@ class HeadcountAnalyst
   def kindergarten_participation_against_high_school_graduation(district_name)
 
     kinder_vs_state = kindergarten_participation_rate_variation(district_name, :against => 'state')
-
     graduation_vs_state = graduation_rate_variation(district_name, :against => 'state')
-
     kindergarten_graduation_variance = kinder_vs_state/graduation_vs_state
+    value = truncate_float(kindergarten_graduation_variance)
 
-    Parse.truncate_float(kindergarten_graduation_variance)
-
-    if kindergarten_graduation_variance < 1.5 && kindergarten_graduation_variance > 0.6
-      return true
-    else
-      return false
-    end
-    # Call kindergarten variation the result of dividing the district's
-    #kindergarten participation by the statewide average. Call graduation
-    #variation the result of dividing the district's graduation rate by the
-    #statewide average. Divide the kindergarten variation by the graduation
-    #variation to find the kindergarten-graduation variance.
-    #
-    # If this result is close to 1, then we'd infer that the kindergarten
-    #variation and the graduation variation are closely related.
+    # if kindergarten_graduation_variance < 1.5 && kindergarten_graduation_variance > 0.6
+    #   return true
+    # else
+    #   return false
+    # end
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(foor = {})
     # Let's consider the kindergarten_participation_against_high_school_graduation
     #and set a correlation window between 0.6 and 1.5. If the result is in that
     #range then we'll say that they are correlated.
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(consider)
+    for_or_across = consider.keys
+    district_name = consider[for_or_across[0]]
+    if district_name == 'state'
+      considered_districts = @dr.districts.keys
+      return true if check_kinder_coorelation(considered_districts)
+    elsif district_name.class == Array
+      considered_districts = consider[for_or_across[0]]
+      return true if check_kinder_coorelation(considered_districts)
+    else
+      considered_districts = [district_name]
+      return true if check_kinder_coorelation(considered_districts)
+    end
+    false
+  end
+
+  def check_kinder_coorelation(considered_districts)
+    tolerance = considered_districts.length * 0.70
+    correlation_list = []
+    considered_districts.each do |district_name|
+      kp = kindergarten_participation_against_household_income(district_name)
+      if kp < 1.5 && kp > 0.6
+        correlation_list << district_name
+      end
+    end
+    return true if correlation_list.length > tolerance
   end
 end
