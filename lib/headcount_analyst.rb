@@ -1,4 +1,4 @@
-require "district_repository"
+require_relative "district_repository"
 
 class HeadcountAnalyst
   attr_accessor :dr
@@ -20,7 +20,7 @@ class HeadcountAnalyst
     array.reduce(0){ |sum, el| sum + el }.to_f / array.size
   end
 
-  def top_statewide_testing_year_over_year_growth(top = {:top => 1}, subject = {}, weighting = {})
+  def top_statewide_testing_year_over_year_growth_in_3rd_grade(top = {:top => 1}, subject = {}, weighting = {})
     #something like....
     # loop through every district
     # call .proficient_for_subject_in_year(subject, year) for min and max years
@@ -29,15 +29,27 @@ class HeadcountAnalyst
     # subtract and divide by two
     # add the districts scores to a hash (or array idk)
     # somehow sort them so we know which ones have the highest scores
+    # growth_hash = {}
+    #
+    # @dr.districts.keys.each do |district_name|
+    #
+    #   max = @dr.find_by_name(district_name).statewidetesting.max_year
+    #
+    # end
+    #   oldest = proficient_for_subject_in_year(subject[:subject], statewidetesting.max_year)
+    #   youngest = proficient_for_subject_in_year(subject[:subject], statewidetesting.min_year)
+    #   growth = (oldest - youngest)/(max-min)
+    #   growth_hash[district_name] = growth
+    # end
 
     #if :top =>1 just return the score
     #if :top is > 1 return an array of all the top districts with their scores
-    if top[:top] == 1
-      #return the score of the highest one
-    else
-      #return array of all the top[:top] districts (most likely 3) with their scores
-      # (this allows for more sizes - top 2, top 4, etc....)
-    end
+    # if top[:top] == 1
+    #   #return the score of the highest one
+    # else
+    #   #return array of all the top[:top] districts (most likely 3) with their scores
+    #   # (this allows for more sizes - top 2, top 4, etc....)
+    # end
   end
 
   def kindergarten_participation_rate_variation(district_name, against)
@@ -96,19 +108,46 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district_name)
-    # Call kindergarten variation the result of dividing the district's
-    #kindergarten participation by the statewide average. Call graduation
-    #variation the result of dividing the district's graduation rate by the
-    #statewide average. Divide the kindergarten variation by the graduation
-    #variation to find the kindergarten-graduation variance.
-    #
-    # If this result is close to 1, then we'd infer that the kindergarten
-    #variation and the graduation variation are closely related.
+    kinder_vs_state = kindergarten_participation_rate_variation(district_name, :against => 'state')
+    graduation_vs_state = graduation_rate_variation(district_name, :against => 'state')
+    kindergarten_graduation_variance = kinder_vs_state/graduation_vs_state
+    value = truncate_float(kindergarten_graduation_variance)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(foor = {})
-    # Let's consider the kindergarten_participation_against_high_school_graduation
-    #and set a correlation window between 0.6 and 1.5. If the result is in that
-    #range then we'll say that they are correlated.
+  def graduation_rate_variation(district_name, against)
+    district_grad_rates = @dr.find_by_name(district_name).enrollment.graduation_rate_by_year.values
+    district_average = average(district_grad_rates)
+    state_grad_rate = @dr.find_by_name('COLORADO').enrollment.graduation_rate_by_year.values
+    state_grad_average = average(state_grad_rate)
+    average = district_average/state_grad_average
+    Parse.truncate_float(average)
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(consider)
+    for_or_across = consider.keys
+    district_name = consider[for_or_across[0]]
+    if district_name == 'state'
+      considered_districts = @dr.districts.keys
+      return true if check_grad_coorelation(considered_districts)
+    elsif district_name.class == Array
+      considered_districts = consider[for_or_across[0]]
+      return true if check_grad_coorelation(considered_districts)
+    else
+      considered_districts = [district_name]
+      return true if check_grad_coorelation(considered_districts)
+    end
+    false
+  end
+
+  def check_grad_coorelation(considered_districts)
+    tolerance = considered_districts.length * 0.70
+    correlation_list = []
+    considered_districts.each do |district_name|
+      kp = kindergarten_participation_against_high_school_graduation(district_name)
+      if kp < 1.5 && kp > 0.6
+        correlation_list << district_name
+      end
+    end
+    return true if correlation_list.length > tolerance
   end
 end

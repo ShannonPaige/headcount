@@ -1,7 +1,6 @@
 require "csv"
 require "district"
 require "parse"
-# require "pry"
 
 class DistrictRepository
   include Parse
@@ -41,7 +40,7 @@ class DistrictRepository
   def find_by_name(name)
     name = name.upcase
     @districts[name]
-    # require "pry"; binding.pry
+
   end
 
   def find_all_matching(name_fragment)
@@ -52,11 +51,4 @@ class DistrictRepository
     end
     matching
   end
-
 end
-
-# if $PROGRAM_NAME == __FILE__
-#   data_dir = File.expand_path '../data', __dir__
-#   dr = DistrictRepository.from_csv(data_dir)
-#   district = dr.find_by_name("Shannon").district_name
-# end

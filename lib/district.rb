@@ -7,7 +7,6 @@ class District
   attr_accessor :name, :data, :enrollment, :statewidetesting, :economicprofile
 
   def initialize(name, data)
-    # require 'pry'; binding.pry
     @name = name.upcase
     @data ||= data
     @enrollment = Enrollment.new(name, data)

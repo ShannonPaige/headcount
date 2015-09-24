@@ -1,4 +1,3 @@
-
 module Parse
   def self.read_in_file(data_dir, file)
     CSV.read(File.join(data_dir, file), headers: true, header_converters: :symbol)
@@ -108,7 +107,7 @@ module Parse
     filename << "_by_number"
     filename = filename.to_sym
     numbers = numbers.group_by do |hash|
-        hash.fetch(:location)
+        hash.fetch(:location).upcase
     end
 
     numbers.each do |district_name, hashes|
@@ -123,7 +122,7 @@ module Parse
     filename << "_by_percentage"
     filename = filename.to_sym
     percent = percent.group_by do |hash|
-        hash.fetch(:location)
+        hash.fetch(:location).upcase
     end
 
     percent.each do |district_name, hashes|
@@ -142,7 +141,7 @@ module Parse
     filename << "_by_number"
     filename = filename.to_sym
     group_by_numbers = group_by_numbers.group_by do |hash|
-        hash.fetch(:location)
+        hash.fetch(:location).upcase
     end
     group_by_numbers.each do |district_name, hashes|
       data_hash[district_name] ||= {}
@@ -160,7 +159,7 @@ module Parse
     filename << "_by_percentage"
     filename = filename.to_sym
     group_by_percent = group_by_percent.group_by do |hash|
-        hash.fetch(:location)
+        hash.fetch(:location).upcase
     end
     group_by_percent.each do |district_name, hashes|
       data_hash[district_name] ||= {}
@@ -182,7 +181,7 @@ module Parse
     end
     info
     grouped_by_district = data.group_by do |hash|
-      hash.fetch(:location)
+      hash.fetch(:location).upcase
     end
     grouped_by_district.each do |district_name, hashes|
       data_hash[district_name] ||= {}
@@ -191,7 +190,6 @@ module Parse
       grouped_by_info = hashes.group_by do |hash|
         hash.fetch(info).to_i
       end
-      grouped_by_info
       grouped_by_info.each do |info_type, hashes|
         data_hash[district_name][filename][info_type] ||= {}
         mapped_data = hashes.map do |hash|

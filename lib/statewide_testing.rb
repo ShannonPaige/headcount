@@ -13,9 +13,16 @@ class StatewideTesting
   end                                                                  # => :initialize
 
   def race_lookup(race)
-      race_table[race]
+    race_table[race]
   end
-                # => :race_lookup
+
+  def max_year
+    data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap].keys.max
+  end
+  #
+  # def min_year
+  #   data[:threerd_grade_students_scoring_proficient_or_above_on_the_csap_tcap].keys.min
+  # end               # => :race_lookup
 
   def proficient_by_grade(grade)
     case grade

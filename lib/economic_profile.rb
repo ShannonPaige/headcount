@@ -33,6 +33,7 @@ class EconomicProfile
   end
 
   def school_aged_children_in_poverty_by_year
+    return {} if data[:school_aged_children_in_poverty_by_percentage] == nil
     data[:school_aged_children_in_poverty_by_percentage]
   end
 

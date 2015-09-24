@@ -1,4 +1,5 @@
 require "district_repository"
+require "headcount_analyst"
 
 class UnknownRaceError < StandardError
 end
