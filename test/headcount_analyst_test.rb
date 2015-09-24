@@ -63,8 +63,8 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_returns_correlation_between_kindergarten_participation_and_high_school_graduation
-    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'district name')
+    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'ACADEMY 20')
     assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'state')
-    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ['district_1', 'district_2', 'district_3', 'district_4'])
+    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ['ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300', 'PLATTE VALLEY RE-3'])
   end
 end

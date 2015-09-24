@@ -202,10 +202,8 @@ module Parse
             [hash[:score].downcase.to_sym, truncate_float(hash[:data].to_f)]
           end
         end
-        if flag
-          data_hash[district_name] = {}
-          data_hash[district_name][filename] = {}
-          data_hash[district_name][filename][info_type] = {}
+        if flag == true
+          return {}
         else
           data_hash[district_name][filename][info_type] = mapped_data.to_h
         end
