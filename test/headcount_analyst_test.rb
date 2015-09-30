@@ -2,12 +2,8 @@ require "headcount_analyst"
 
 class HeadcountAnalystTest < Minitest::Test
   def setup
-    @dr = DistrictRepository.from_csv(data_dir)
+    @dr = DistrictRepositoryTest.make_repository
     @ha = HeadcountAnalyst.new(@dr)
-  end
-
-  def data_dir
-    File.expand_path '../data', __dir__
   end
 
   def test_finds_a_single_statewide_leader_in_a_single_subject
@@ -63,8 +59,8 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_returns_correlation_between_kindergarten_participation_and_high_school_graduation
-    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'ACADEMY 20')
-    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'state')
-    assert @ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ['ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300', 'PLATTE VALLEY RE-3'])
+    refute @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'ACADEMY 20')
+    refute @ha.kindergarten_participation_correlates_with_high_school_graduation(:for => 'state')
+    refute @ha.kindergarten_participation_correlates_with_high_school_graduation(:across => ['ACADEMY 20', 'ADAMS COUNTY 14', 'AGATE 300', 'PLATTE VALLEY RE-3'])
   end
 end

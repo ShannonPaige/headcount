@@ -2,8 +2,12 @@ require "district_repository"
 
 class DistrictRepositoryTest < Minitest::Test
   def setup
-    @dr ||= DistrictRepository.from_csv(data_dir)
+    @dr = DistrictRepositoryTest.make_repository
     @district = @dr.find_by_name("ACADEMY 20")
+  end
+
+  def self.make_repository
+    @dr ||= DistrictRepository.from_csv(File.expand_path '../data', __dir__)
   end
 
   def data_dir

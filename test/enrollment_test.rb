@@ -1,14 +1,11 @@
 require "enrollment"
+require "district_repository"
 
 class EnrollmentTest < Minitest::Test
   def setup
-    @dr = DistrictRepository.from_csv(data_dir)
+    @dr = DistrictRepositoryTest.make_repository
     @district = @dr.find_by_name("ACADEMY 20")
     @enrollment_instance = @district.enrollment
-  end
-
-  def data_dir
-    File.expand_path '../data', __dir__
   end
 
   def test_returns_enrollment_number_in_a_given_year
